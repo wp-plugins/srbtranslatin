@@ -34,7 +34,7 @@
 
 /*
 Plugin Name: Transliteration of Serbian Cyrillic to Latin Script
-Plugin URI: http://pedja.supurovic.net/srbtranslatin-potpuno-resenje-za-preslovljavanje-cirilice-u-latinicu-za-wordpress/
+Plugin URI: http://pedja.supurovic.net/srbtranslatin/
 Description: Allows users to choose if they want to see site in Serbian Cyrillic or Serbian Latin script. After installation, check <a href="options-general.php?page=srbtranslatoptions">Settings</a>
 Author: Predrag Supurović
 Version: 0.13 beta (not yet for public use)
