@@ -1,6 +1,6 @@
 <?php
 /*
- *
+ * 
  * Copyright (c) 2008 Predrag Supurović
  *
  * All rights reserved.
