@@ -69,11 +69,6 @@ No. This is free to use script. If you want to show appreciation, spread the wor
 
 Partialy rewriten code according to new Wordpress API. Also, some new functionality added.
 
-= 1.21 =
-
-Added full support for exernal language files and Serbian translation included.
-
-
 == Upgrade Notice ==
 
 = 1.20 =
