@@ -1,7 +1,7 @@
 <?php
 /*
- * 
- * Copyright (c) 2008 Predrag Supurović
+ *
+ * Copyright (c) 2008-2010 Predrag Supurović
  *
  * All rights reserved.
  *
@@ -37,7 +37,7 @@ Plugin Name: Transliteration of Serbian Cyrillic to Latin Script
 Plugin URI: http://pedja.supurovic.net/srbtranslatin/
 Description: Allows users to choose if they want to see site in Serbian Cyrillic or Serbian Latin script. After installation, check <a href="options-general.php?page=srbtranslatoptions">Settings</a>
 Author: Predrag Supurović
-Version: 0.13
+Version: 1.18
 Author URI: http://pedja.supurovic.net
 */
 
@@ -170,7 +170,13 @@ class SrbTransLatin {
 		"Џе" => "Dže",
 		"Џи" => "Dži",
 		"Џо" => "Džo",
-		"Џу" => "Džu"
+		"Џу" => "Džu",
+    ".срб" => ".срб",
+    "иѕ.срб" => "иѕ.срб",
+    "њњњ.из.срб" => "њњњ.из.срб",
+    ".СРБ" => ".СРБ",
+    "ИЗ.СРБ" => "ИЗ.СРБ",
+    "ЊЊЊ.ИЗ.СРБ" => "ЊЊЊ.ИЗ.СРБ"    
    );
 
 
@@ -192,6 +198,7 @@ class SrbTransLatin {
 
 		if ($stl_transliterate_title) {
 			add_action('sanitize_title', array(&$this, 'change_permalink'), 0);
+			add_filter('the_title', array(&$this,'convert_title'), 10, 1);
 		}
 
 		add_action('wp_head', array(&$this,'buffer_start'));
@@ -225,7 +232,7 @@ class SrbTransLatin {
 
 
 
-	function stl_scripts_widget() {
+	function stl_scripts_widget( $args ) {
 		global $stl_default_language;
 		global $stl_current_language;
 		global $stl_show_widget_title;
@@ -233,14 +240,16 @@ class SrbTransLatin {
 		global $stl_widget_type;
 
 		global $stl_global;
-		
+
+		extract( $args );		
 		
 ?>
 <!-- Widget Serbian Scripts -->
 <?php
+		echo $before_widget;
 		if ($stl_show_widget_title) {
+			echo $before_title . $stl_widget_title . $after_title;
 ?>
-<h3 class="widgettitle"><?php echo $stl_widget_title ?></h3>
 <?php
 		}
 		if ($stl_widget_type == 'list') {
@@ -253,10 +262,15 @@ class SrbTransLatin {
 </form>
 <?php
 		} else {
+
+			$m_cir_url = url_current_add_param ('lang=cir', true);
+			$m_lat_url = url_current_add_param ('lang=lat', true);
+
+
 ?>
 <ul>
-<li><a href="<?php echo $stl_default_language != '1cir' ? '?lang=cir"' : '' ?>"><lang id="skip">ћирилица</lang></a></li>
-<li><a href="<?php echo $stl_default_language != '1lat' ? '?lang=lat"' : '' ?>"><lang id="skip">latinica</lang></a></li>
+<li><a href="<?php echo $stl_default_language != '1cir' ? $m_cir_url : '' ?>"><lang id="skip">ћирилица</lang></a></li>
+<li><a href="<?php echo $stl_default_language != '1lat' ? $m_lat_url : '' ?>"><lang id="skip">latinica</lang></a></li>
 </ul>
 
 <?php
@@ -265,6 +279,7 @@ class SrbTransLatin {
 
 <!-- Widget Serbian Scripts -->
 <?php
+		echo $after_widget;
 	} // function
 
 
@@ -288,6 +303,12 @@ class SrbTransLatin {
 	function callback($buffer) {
 		$m_buffer = $this->convert_script($buffer);
 		return $m_buffer;
+	}
+
+
+	function convert_title ($title) {
+	    $title = $this->convert_script($title);
+	    return $title;
 	}
 	
 	function buffer_start() { 
@@ -316,12 +337,13 @@ class SrbTransLatin {
     // parse_lang ($p_input, $p_def_lang)
     //
     // Parse input string int chunks delimited by <lang></lang> tabs. That allows us to process them with 
-	// different languages (each chunk may be set to other language provided in <lang id="nn"> tag where 
-	//	nn is language id). You may set defautl language which is used if chunk doews not heave it's own 
-	// language set. If chuks are nested, language of containeer will be used for contained chung, except
-	// if contained chung does not have its own language set.
+	  // different languages (each chunk may be set to other language provided in <lang id="nn"> tag where 
+	  //	nn is language id). If tag nn is "skip" then language transformation will not occur for that chunk.
+	  // You may set default language which is used if chunk does not heave it's own 
+	  // language set. If chuks are nested, language of containeer will be used for contained chunk, except
+	  // if contained chung does not have its own language set.
 	function parse_lang ($p_input, $p_def_lang) {
-		$regex = '#\<lang.*?\>((?:[^<]|\<(?!/?lang.*?\>)|(?R))+)\</lang\>#';
+		$regex = '#\[lang.*?\]((?:[^[]|\](?!/?lang.*?\])|(?R))+)\[/lang\]#';
 		
 		if (preg_match ($regex, $p_input)) {
 			$split = preg_split ($regex, $p_input,2);
@@ -338,7 +360,7 @@ class SrbTransLatin {
 			if (strlen ($split[0]) > 0) $m_input = substr ($m_input, strlen ($split[0]));
 			if (strlen ($split[1]) > 0) $m_input = substr ($m_input, 0, - strlen ($split[1]));
 			
-			preg_match ('/\<lang(( +[^\>]*)?id=(")?(([a-z]-?)*)"?)?\>/', $p_input, $m_matches);
+			preg_match ('/\[lang(( +[^\]]*)?id=(")?(([a-z]-?)*)"?)?\]/', $p_input, $m_matches);
 			
 			if (! empty ($m_matches[4])) {
 				$m_cur_lang = $m_matches[4]; 

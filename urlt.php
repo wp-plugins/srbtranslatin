@@ -20,7 +20,7 @@
 
 
 //
-// function url_add_param ($p_url, $p_param)
+// function url_add_param ($p_url, $p_param, $p_replace)
 // Adds specified list of parameters to specified url. If url already contains parameter this will change it's value.
 // $p_url may be in URI format
 // $p_param contains list of parameters as string in URI format (param1=value&param2=value2&param3=value3"
@@ -31,15 +31,16 @@
 function url_add_param ($p_url, $p_param, $p_replace = false) {
 
   $m_param_list = preg_split ("/&/", $p_param);
- 
+
   foreach ($m_param_list as $m_param_item) {
 
     $m_param_list_val = preg_split ("/=/", $m_param_item);
 
 	$m_pattern = "/($m_param_list_val[0])=([^&]+)/";
+
 	if (preg_match ($m_pattern, $p_url)) {
 		if ($p_replace == true) {
-          $p_url = preg_replace ($m_pattern, "$1=$m_param_list_val[1]", $p_url);
+       			$p_url = preg_replace ($m_pattern, "$1=$m_param_list_val[1]", $p_url);
 		}
 	} else {
 	  if (preg_match ("/\?/", $p_url)) {
@@ -53,15 +54,15 @@ function url_add_param ($p_url, $p_param, $p_replace = false) {
 }
 
 //
-// function url_current_add_param ($p_param)
+// function url_current_add_param ($p_param, $p_replace = false)
 // Adds specified list of parameters to curent url ([REQUEST_URI])
 // It calls url_add_param () 
 //
 // Demo:
 // echo url_current_add_param ("cyr=eee&lat=fff&uh=12"); 
 //
-function url_current_add_param ($p_param) {
-  $m_url = url_add_param ("http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], $p_param);
+function url_current_add_param ($p_param, $p_replace = false) {
+  $m_url = url_add_param ("http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], $p_param, $p_replace);
   return $m_url;
 }
 

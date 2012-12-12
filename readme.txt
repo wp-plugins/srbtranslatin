@@ -2,7 +2,7 @@
 Contributors: pedjas
 Tags: transliteration, serbian, cyrillic, latin, multilanguage, script
 Requires at least: 2.6.1
-Tested up to: 2.6.1
+Tested up to: 3.5
 Stable tag: trunk
 
 SrbTransLatin is targeted to WP blogs written in Serbian language. It solves problem of two scripts equally used for Serbian language (Cyrillic and Latin) in the best possible manner: authors may enter posts and other information using Cyrillic script, but visitor may choose if he wants to read in Cyrillic or Latin script.
