@@ -33,11 +33,11 @@
  */
 
 /*
-Plugin Name: Transliteration of Serbian Cyrillic to Latin Script
+Plugin Name: Serbian Transliteration of Cyrillic to Latin Script
 Plugin URI: http://pedja.supurovic.net/srbtranslatin/
 Description: Allows users to choose if they want to see site in Serbian Cyrillic or Serbian Latin script. After installation, check <a href="options-general.php?page=srbtranslatoptions">Settings</a>
 Author: Predrag Supurović
-Version: 1.18
+Version: 1.20
 Author URI: http://pedja.supurovic.net
 */
 
@@ -50,15 +50,45 @@ Author URI: http://pedja.supurovic.net
 //		global $stl_widget_title;
 //		global $stl_widget_type;
 
+$m_lang_cookie_name = 'stl_default_lang';
+
+$stl_use_cookie_name = 'stl_use_cookie';
+$stl_use_cookie_data_field_name = 'stl_use_cookie';
+$stl_use_cookie = get_option ($stl_use_cookie_name) == 'on';
+
+$m_cookie_language = '';
+
+if ($stl_use_cookie) {
+	if (isset($_COOKIE[$m_lang_cookie_name])) {
+		$m_cookie_language = $_COOKIE[$m_lang_cookie_name];
+	}
+} 
 
 $stl_default_language_opt_name = 'stl_default_language';
-$stl_default_language_data_field_name = '$stl_default_language';
+$stl_default_language_data_field_name = 'stl_default_language';
 
-$stl_default_language = get_option( $stl_default_language_opt_name );
+$m_default_language = get_option( $stl_default_language_opt_name );
+if ($m_default_language == 'ifcir') {
+	$m_accept_languages = split(',', $_SERVER["HTTP_ACCEPT_LANGUAGE"]);
+	$m_accepts_cyrillic = false;
+	foreach ($m_accept_languages as $m_item) {
+		$m_accepts_cyrillic = $m_accepts_cyrillic || ereg("^(sr|ru|mk|bg|be|bs|kk|ky|mn|tg|uk)", $m_item);
+	}
 
-if ( ($stl_default_language != 'cir') and ($stl_default_language != 'lat') ) {
-	$stl_default_language = 'cir';
+	if ($m_accepts_cyrillic) {
+		$m_default_language = 'cir';
+	} else {
+		$m_default_language = 'lat';
+	}
 }
+
+if ( ($m_default_language != 'cir') and ($m_default_language != 'lat') ) {
+	$m_default_language = 'cir';
+}
+
+$stl_default_language = $m_default_language;
+
+//echo "m_default_language=$m_default_language<br>";
 
 $stl_transliterate_title_opt_name = 'stl_transliterate_title';
 $stl_transliterate_title_data_field_name = 'stl_transliterate_title';
@@ -80,21 +110,41 @@ if ( ($stl_widget_type != 'links') and ($stl_widget_type != 'list') ) {
 	$stl_widget_type = 'links';
 }
 
+if ( isset($_REQUEST['lang']) ) {
+	$stl_current_language  = $_REQUEST['lang'];
+} else {
+	$stl_current_language = $m_cookie_language;
+}
 
-$stl_current_language = $stl_default_language;
+if ( ($stl_current_language  != "cir") and ($stl_current_language != "lat") ) {
+	$stl_current_language = $stl_default_language;
+}
+
+//echo "m_cookie_language=$m_cookie_language<br>";	
+//echo "stl_current_language=$stl_current_language<br>";
+
+if ($stl_use_cookie) {
+	setcookie($m_lang_cookie_name, $stl_current_language, strtotime("+1 year"), "/");
+} else {
+	setcookie($m_lang_cookie_name, $stl_current_language, time()-100, "/");
+}
+
 $stl_global['init'] = true;
 
 
 // Hook for adding admin menus
 add_action('admin_menu', 'stl_add_page');
 
+// Hook for adding widget
+add_action( 'widgets_init', create_function( '', 'register_widget( "srbtranslatin_widget" );' ) );
 
 
+include ('srbtranslatin_widget.php');
 include ('urlt.php');
 
 class SrbTransLatin {
-    var $replace = array(
-	    "А" => "A",
+  var $replace = array(
+    "А" => "A",
 		"Б" => "B",
 		"В" => "V",
 		"Г" => "G",
@@ -186,13 +236,7 @@ class SrbTransLatin {
 			global $stl_transliterate_title;
 			
 			
-		if ( isset($_REQUEST['lang']) ) {
-			$stl_current_language  = $_REQUEST['lang'];
-		} 
-		
-		if ( ($stl_current_language  != "cir") and ($stl_current_language != "lat") ) {
-			$stl_current_language = $stl_default_language;
-		}
+	
 		
 		add_action("plugins_loaded",array(&$this,"init_lang"));
 
@@ -223,8 +267,8 @@ class SrbTransLatin {
 	
 	
 	function init_lang() {
-		register_sidebar_widget("Serbian Scripts", array (&$this,"stl_scripts_widget"));
 /*
+		register_sidebar_widget("Serbian Scripts", array (&$this,"stl_scripts_widget"));
 		register_sidebar_widget("Serbian Transliteration (links)", array (&$this,"stl_links_widget"));
 		register_sidebar_widget("Serbian Transliteration (list)",  array (&$this,"stl_list_widget"));
 */
@@ -336,12 +380,12 @@ class SrbTransLatin {
     //
     // parse_lang ($p_input, $p_def_lang)
     //
-    // Parse input string int chunks delimited by <lang></lang> tabs. That allows us to process them with 
-	  // different languages (each chunk may be set to other language provided in <lang id="nn"> tag where 
+    // Parse input string int chunks delimited by [lang][/lang] tabs. That allows us to process them with 
+	  // different languages (each chunk may be set to other language provided in [lang id="nn"] tag where 
 	  //	nn is language id). If tag nn is "skip" then language transformation will not occur for that chunk.
 	  // You may set default language which is used if chunk does not heave it's own 
-	  // language set. If chuks are nested, language of containeer will be used for contained chunk, except
-	  // if contained chung does not have its own language set.
+	  // language set. If chunks are nested, language of containeer will be used for contained chunk, except
+	  // if contained chunk does not have its own language set.
 	function parse_lang ($p_input, $p_def_lang) {
 		$regex = '#\[lang.*?\]((?:[^[]|\](?!/?lang.*?\])|(?R))+)\[/lang\]#';
 		
@@ -469,6 +513,8 @@ function stl_options_page() {
 	global $stl_show_widget_title_data_field_name;
 	global $stl_widget_type_opt_name;
 	global $stl_widget_type_data_field_name;
+	global $stl_use_cookie_name;
+	global $stl_use_cookie_data_field_name;
 	
 	
    // Read in existing option value from database
@@ -489,6 +535,14 @@ function stl_options_page() {
 	if ( ($stl_widget_type_opt_val != 'links') and ($stl_widget_type_opt_val != 'list') ) {
 		$stl_widget_type_opt_val = 'links';
 	}
+	
+	$stl_use_cookie_val = get_option($stl_use_cookie_name);	
+	
+//echo "stl_use_cookie_val=$stl_use_cookie_val<br>";	
+
+//echo "post<pre>";
+//print_r ($_POST);
+//echo "</pre>#";
 
     // See if the user has posted us some information
     // If they did, this hidden field will be set to 'Y'
@@ -508,6 +562,9 @@ function stl_options_page() {
 		
 				$stl_widget_type_opt_val = $_POST[$stl_widget_type_data_field_name];		
         update_option( $stl_widget_type_opt_name, $stl_widget_type_opt_val );		
+				
+				$stl_use_cookie_val = $_POST[$stl_use_cookie_name];
+				update_option( $stl_use_cookie_name, $stl_use_cookie_val );
 
         // Put an options updated message on the screen
 
@@ -516,6 +573,11 @@ function stl_options_page() {
 <?php
 
     }
+		
+		if (empty ($stl_use_cookie_val)) $stl_use_cookie_val = 'off';			
+
+
+//echo "stl_use_cookie_val=$stl_use_cookie_val<br>";	
 
     // Now display the options editing screen
 
@@ -535,30 +597,25 @@ function stl_options_page() {
 <th scope="row"><?php _e("Default script:"); ?></th>
 <td>
 <select name="<?php echo $stl_default_language_data_field_name; ?>">
-<option value="cir" <?php echo $stl_default_language_opt_val=='cir' ? 'selected="selected"' : '' ?>><lang id="skip">ћирилица</lang></option>
-<option value="lat" <?php echo $stl_default_language_opt_val=='lat' ? 'selected="selected"' : '' ?>><lang id="skip">латиница</lang></option>
+<option value="cir" <?php echo $stl_default_language_opt_val=='cir' ? 'selected="selected"' : '' ?>><?php echo __('Cyrillic'); ?></option>
+<option value="lat" <?php echo $stl_default_language_opt_val=='lat' ? 'selected="selected"' : '' ?>><?php echo __('Latin'); ?></option>
+<option value="ifcir" <?php echo $stl_default_language_opt_val=='ifcir' ? 'selected="selected"' : '' ?>><?php echo __("Cyrillic, if visitor's browser accepts it") ?></option>
+
 </select>
 <br /><?php _e("Set script that would be used as default, if user do not make script choice"); ?></td>
 </tr>
+
+<tr>
+<th scope="row"><?php _e("Use cookie:"); ?></th>
+<td><input name="<?php echo $stl_use_cookie_name; ?>" type="checkbox" <?php echo $stl_use_cookie_val=='on' ? 'checked="checked"' : '' ?>> <?php _e("use cookie"); ?><br />
+Check to make blog remember users last script selection to cookie.
+</td>
+</tr>
+
 <tr>
 <th scope="row"><?php _e("Permalink options:"); ?></th>
 <td><input name="<?php echo $stl_transliterate_title_data_field_name; ?>" type="checkbox" <?php echo $stl_transliterate_title_opt_val=='on' ? 'checked="checked"' : '' ?>> <?php _e("transliterate title to permalink"); ?><br />
 Check to make blog autocreate permalinks in Latin script even if title is in Cyrillic.
-</td>
-</tr>
-<tr>
-<th scope="row"><?php _e("Widget options:"); ?></th>
-<td>
-<input name="<?php echo $stl_show_widget_title_data_field_name; ?>" type="checkbox" <?php echo $stl_show_widget_title_opt_val=='on' ? 'checked="checked"' : '' ?>> <?php _e("show widget title"); ?>
-<br />
-<?php _e("Widget title:"); ?> <input name="<?php echo $stl_widget_title_data_field_name; ?>" value="<?php echo $stl_widget_title_opt_val; ?>">
-<br />
-<?php _e("Selection type:"); ?>
-<select name="<?php echo $stl_widget_type_data_field_name; ?>">
-<option value="links" <?php echo $stl_widget_type_opt_val=='links' ? 'selected="selected"' : '' ?>><lang id="skip"><?php _e("web links")?></lang></option>
-<option value="list" <?php echo $stl_widget_type_opt_val=='list' ? 'selected="selected"' : '' ?>><lang id="skip"><?php _e("combo box")?></lang></option>
-</select>
-
 </td>
 </tr>
 </table>

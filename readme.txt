@@ -5,49 +5,72 @@ Requires at least: 2.6.1
 Tested up to: 3.5
 Stable tag: trunk
 
-SrbTransLatin is targeted to WP blogs written in Serbian language. It solves problem of two scripts equally used for Serbian language (Cyrillic and Latin) in the best possible manner: authors may enter posts and other information using Cyrillic script, but visitor may choose if he wants to read in Cyrillic or Latin script.
+SrbTransLatin handles using Serbian language Cyrillic and Latin script. For Cyrillic content, visitor may choose to view it using Cyrillic or Latin.
 
 == Description ==
 
-Site owner may set default script to show, by altering value of the var $sr2latin_default_language.
-
-Script may be selected manually, by adding ?lang=cir or ?lang=lat to document url. If parameter is not specified default script is used. Initially, cyrillic script is set as default.
-
-Site owner may use widget to allow visitors to choose among Cyrillic and Latin script. He may choose if script options are shown as html links or items of combo box. By default, html link are dipslayed. He also may set if widget would show title or not. Titles are hidden by default.
-
-When user selects script, his choice stays permanent while he is on site. All internal links within site are altered to contain information about selected script. This means, when link is copied and pasted to some other site, it would contain information which script to use for displaying contents.
-
-When transliteration occurs, everything in the HTML document is transliterated from Cyrillic to Latin script except if contents is placed among <lang id="skip"> and </lang> tags. This leaves user to mark part of the tehst he does not want to be transliterated at all, meaning, some parts of Cyrillic text may stay Cyrillic even if user chooses to view site in Latin script.
+Contents of the site should be written using Cyrillic script. Then, this plugin will allow users to choose to read contents in Cyrollic or Latin script.
 
 If some contents is entered in Latin script, it would stay in Latin even if user chooses to use Cyrillic. Transliteration occurs only from Cyrillic to Latin script.
 
-Initially, when new article is posted using Cyrillic script in title, permalink is created with conversion to Latin script. Site owner may turn it of by setting variable $sr2latin_transliterate_title to true.
+Site owner may set default for script to show: 
+- Cyrillic,
+- Latin and
+- Cyrillic if visitor accepts it (has set some Cyrillic language as acceptable in his browser)
+
+Script also may be selected manually, by adding ?lang=cir or ?lang=lat to document url. If parameter is not specified default script is used.
+
+Site owner may use widget to allow visitors to choose among Cyrillic and Latin script. He may choose if script options are shown as html links or items of combo box. By default, html link are dipslayed. He also may set if widget would show title or not.
+
+When user selects script, his choice stays permanent while he is on site. All internal links within site are altered to contain information about selected script. This means, when link is copied and pasted to some other site, it would contain information which script to use for displaying contents. There is an option to remember choosen script as cookie in visitor's brower so he has no need to set it again on future visits.
+
+When transliteration occurs, everything in the HTML document is transliterated from Cyrillic to Latin script except if contents is placed among [lang id="skip"] and [/lang] tags. This leaves user to mark part of the text he does not want to be transliterated at all, meaning, some parts of Cyrillic text may stay Cyrillic even if user chooses to view site in Latin script.
+
+Initially, when new article is posted using Cyrillic script in title, permalink is created with conversion to Latin script. Site owner may turn it of.
 
 Transliteration works for all feeds too (atom, rdf, rss, rss2).
 
 
 
-This plugin is developed inspired by two plugins WP Translit by Aleksandar Urošević and srlatin by Kimmo Suominen. I actually merged functionality of these two and expanded it with a lot of new functionality.
+This plugin is developed inspired by two plugins WP Translit by Aleksandar Urošević and srlatin by Kimmo Suominen. I actually merged functionality of these two and expanded it with a lot of new functionality I needed for my site.
 
 
 
 == Installation ==
 
-1. Extract package and upload `srb-trans-latin` directory to `/wp-content/plugins/srbtranslatin` directory
+1. Extract package and upload `srbtranslatin` directory to `/wp-content/plugins/srbtranslatin` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Add widget `Serbian Transliteration (links)` or `Serbian Transliteration (list)`
-
+3. Add widget `Serbian Transliteration (links)` or `Serbian Transliteration (list)` and set it's options:
+    - set title for script selection wigdet (default: Избор писма)
+    - set if title should be shown for script selection widgets (default: title is not shown)
+    - set if script selection is displayed as web links or options of combo box
 
 Open Settings / SrbTransLat and set parameters according to your needs:
 
 - set default script to be used if user do not make choice of script (default: Cyrillic)
+- set if you want selected language to be saved in visitor's browser cookie
 - set if permalinks are autogenerated in Latin script even if title is in Cyrillic (default: conversion to Latin)
-- set title for script selection wigdet (default: Избор писма)
-- set if title should be shown for script selection widgets (default: title is not shown)
-- set if script selection is displayed as web links or options of combo box
 
 
 == Frequently Asked Questions ==
 
-None yet.
+= Can this transliterate my blog which uses Serbian Latin script into Serbian Cyrillic?
 
+No. Such conversion is hard if imposible due to not unique transliteration rules. It is recomended that you create  contents on your site using Cyrillic script if you need both scripts.
+
+
+= This is really nice script which I use on my site. Can I donate some money to author?
+
+No. This is free to use script. If you want to show appreciation, spread the work, share the link to http://pedja.supurovic.net/projekti/srbtranslatin
+
+== Changelog ==
+
+= 1.20 =
+
+Partialy rewriten code according to new Wordpress API. Also, some new functionality added.
+
+== Upgrade Notice ==
+
+= 1.20 =
+
+Widget is rewritten. Widget settings are separated from plugin options to widget options form. Thus, after update you will loose widget settings. Do not forget to check them out after upgrade.
