@@ -37,7 +37,7 @@ Plugin Name: Serbian Transliteration of Cyrillic to Latin Script
 Plugin URI: http://pedja.supurovic.net/srbtranslatin/
 Description: Allows users to choose if they want to see site in Serbian Cyrillic or Serbian Latin script. After installation, check <a href="options-general.php?page=srbtranslatoptions">Settings</a>
 Author: Predrag Supurović
-Version: 1.20
+Version: 1.21
 Author URI: http://pedja.supurovic.net
 */
 
@@ -49,6 +49,8 @@ Author URI: http://pedja.supurovic.net
 //		global $stl_show_widget_title;
 //		global $stl_widget_title;
 //		global $stl_widget_type;
+
+load_plugin_textdomain( 'srbtranslatin', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
 
 $m_lang_cookie_name = 'stl_default_lang';
 
@@ -97,7 +99,7 @@ $stl_transliterate_title = get_option( $stl_transliterate_title_opt_name ) == 'o
 $stl_widget_title_opt_name = 'stl_widget_title';
 $stl_widget_title_data_field_name = 'stl_widget_title';
 $stl_widget_title = get_option( $stl_widget_title_opt_name );
-if (empty ($stl_widget_title)) $stl_widget_title  = "Избор писма";
+if (empty ($stl_widget_title)) $stl_widget_title  = __("Script selection", 'srbtranslatin');
 
 $stl_show_widget_title_opt_name = 'stl_show_widget_title';
 $stl_show_widget_title_data_field_name = 'stl_show_widget_title';
@@ -569,7 +571,7 @@ function stl_options_page() {
         // Put an options updated message on the screen
 
 ?>
-<div class="updated"><p><strong><?php _e('Options saved.'); ?></strong></p></div>
+<div class="updated"><p><strong><?php _e('Options saved.', 'srbtranslatin'); ?></strong></p></div>
 <?php
 
     }
@@ -585,7 +587,7 @@ function stl_options_page() {
 
     // header
 
-    echo "<h2>" . __( 'SrbTransLat Plugin Options') . "</h2>";
+    echo "<h2>" . __( 'SrbTransLat Plugin Options', 'srbtranslatin') . "</h2>";
 
     // options form
     
@@ -594,35 +596,35 @@ function stl_options_page() {
 <form name="form1" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
 <table class="form-table">
 <tr>
-<th scope="row"><?php _e("Default script:"); ?></th>
+<th scope="row"><?php _e("Default script:", 'srbtranslatin'); ?></th>
 <td>
 <select name="<?php echo $stl_default_language_data_field_name; ?>">
-<option value="cir" <?php echo $stl_default_language_opt_val=='cir' ? 'selected="selected"' : '' ?>><?php echo __('Cyrillic'); ?></option>
-<option value="lat" <?php echo $stl_default_language_opt_val=='lat' ? 'selected="selected"' : '' ?>><?php echo __('Latin'); ?></option>
-<option value="ifcir" <?php echo $stl_default_language_opt_val=='ifcir' ? 'selected="selected"' : '' ?>><?php echo __("Cyrillic, if visitor's browser accepts it") ?></option>
+<option value="cir" <?php echo $stl_default_language_opt_val=='cir' ? 'selected="selected"' : '' ?>><?php echo __('Cyrillic', 'srbtranslatin'); ?></option>
+<option value="lat" <?php echo $stl_default_language_opt_val=='lat' ? 'selected="selected"' : '' ?>><?php echo __('Latin', 'srbtranslatin'); ?></option>
+<option value="ifcir" <?php echo $stl_default_language_opt_val=='ifcir' ? 'selected="selected"' : '' ?>><?php echo __("Cyrillic, if visitor's browser accepts it", 'srbtranslatin') ?></option>
 
 </select>
-<br /><?php _e("Set script that would be used as default, if user do not make script choice"); ?></td>
+<br /><?php _e("Set script that would be used as default, if user do not make script choice", 'srbtranslatin'); ?></td>
 </tr>
 
 <tr>
-<th scope="row"><?php _e("Use cookie:"); ?></th>
-<td><input name="<?php echo $stl_use_cookie_name; ?>" type="checkbox" <?php echo $stl_use_cookie_val=='on' ? 'checked="checked"' : '' ?>> <?php _e("use cookie"); ?><br />
-Check to make blog remember users last script selection to cookie.
+<th scope="row"><?php _e("Use cookie:", 'srbtranslatin'); ?></th>
+<td><input name="<?php echo $stl_use_cookie_name; ?>" type="checkbox" <?php echo $stl_use_cookie_val=='on' ? 'checked="checked"' : '' ?>> <?php _e("use cookie", 'srbtranslatin'); ?><br />
+<?php echo __('Check to make blog remember users last script selection to cookie.', 'srbtranslatin'); ?>
 </td>
 </tr>
 
 <tr>
-<th scope="row"><?php _e("Permalink options:"); ?></th>
-<td><input name="<?php echo $stl_transliterate_title_data_field_name; ?>" type="checkbox" <?php echo $stl_transliterate_title_opt_val=='on' ? 'checked="checked"' : '' ?>> <?php _e("transliterate title to permalink"); ?><br />
-Check to make blog autocreate permalinks in Latin script even if title is in Cyrillic.
+<th scope="row"><?php _e("Permalink options:", 'srbtranslatin'); ?></th>
+<td><input name="<?php echo $stl_transliterate_title_data_field_name; ?>" type="checkbox" <?php echo $stl_transliterate_title_opt_val=='on' ? 'checked="checked"' : '' ?>> <?php _e("transliterate title to permalink", 'srbtranslatin'); ?><br />
+<?php echo __('Check to make blog autocreate permalinks in Latin script even if title is in Cyrillic.', 'srbtranslatin'); ?>
 </td>
 </tr>
 </table>
 <hr />
 
 <p class="submit">
-<input type="submit" name="Submit" value="<?php _e('Update Options') ?>" />
+<input type="submit" name="Submit" value="<?php _e('Update Options', 'srbtranslatin') ?>" />
 </p>
 
 </form>

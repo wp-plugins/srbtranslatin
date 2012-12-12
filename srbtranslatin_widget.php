@@ -93,7 +93,7 @@ class SrbTransLatin_Widget extends WP_Widget {
 			$title = $instance[ 'title' ];
 		}
 		else {
-			$title = "Избор писма";
+			$title = __("Script selection", 'srbtranslatin');
 		}
 
 		if ( isset( $instance[ 'show_title' ] ) ) {
@@ -127,19 +127,19 @@ class SrbTransLatin_Widget extends WP_Widget {
 		</p>
 
 		<p>
-		<input id="<?php echo $this->get_field_id( 'show_title' ); ?>" name="<?php echo $this->get_field_name( 'show_title' ); ?>" type="checkbox" <?php echo $show_title=='on' ? 'checked="checked"' : '' ?>> <?php _e("show widget title"); ?>
+		<input id="<?php echo $this->get_field_id( 'show_title' ); ?>" name="<?php echo $this->get_field_name( 'show_title' ); ?>" type="checkbox" <?php echo $show_title=='on' ? 'checked="checked"' : '' ?>> <?php _e("show widget title", 'srbtranslatin'); ?>
 		</p>
 
 		<label for="<?php echo $this->get_field_id( 'selection_type' ); ?>"><?php _e( 'Selection type:' ); ?></label> 
 		<select id="<?php echo $this->get_field_id( 'selection_type' ); ?>" name="<?php echo $this->get_field_name( 'selection_type' ); ?>">
-			<option value="links" <?php echo $selection_type=='links' ? 'selected="selected"' : '' ?>><?php _e("web links")?></option>
-			<option value="list" <?php echo $selection_type=='list' ? 'selected="selected"' : '' ?>><?php _e("combo box")?></option>
-			<option value="oneline" <?php echo $selection_type=='oneline' ? 'selected="selected"' : '' ?>><?php _e("one line")?></option>
+			<option value="links" <?php echo $selection_type=='links' ? 'selected="selected"' : '' ?>><?php _e("web links", 'srbtranslatin')?></option>
+			<option value="list" <?php echo $selection_type=='list' ? 'selected="selected"' : '' ?>><?php _e("combo box", 'srbtranslatin')?></option>
+			<option value="oneline" <?php echo $selection_type=='oneline' ? 'selected="selected"' : '' ?>><?php _e("one line", 'srbtranslatin')?></option>
 		</select>
 
 
 		<p>
-		<label for="<?php echo $this->get_field_id( 'oneline_separator' ); ?>"><?php _e( 'One line separator:' ); ?></label> 
+		<label for="<?php echo $this->get_field_id( 'oneline_separator' ); ?>"><?php _e( 'One line separator:', 'srbtranslatin' ); ?></label> 
 		<input class="" size="4" id="<?php echo $this->get_field_id( 'oneline_separator' ); ?>" name="<?php echo $this->get_field_name( 'oneline_separator' ); ?>" type="text" value="<?php echo esc_attr( $oneline_separator ); ?>" />
 		</p>
 
