@@ -39,7 +39,7 @@ stl_show_selector (selector_type, oneline_separator)
 
 selector_type chooses which type of selector to display: 
 
-  - links - list of choices in form of widget items
+	- links - list of choices in form of widget items
 
 	- list - list of choices in form of dropdown selection
 
