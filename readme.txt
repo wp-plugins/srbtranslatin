@@ -38,8 +38,11 @@ If you need to put script selector in site template outside widgets areas then y
 stl_show_selector (selector_type, oneline_separator)
 
 selector_type chooses which type of selector to display: 
+
   links - list of choices in form of widget items
+
 	oneline - list of script choices as one line separated by oneline_separator
+
 
 To use this function just call it from place where you need code to be inserted, like:
 
@@ -75,7 +78,7 @@ No. Such conversion is hard if imposible due to not unique transliteration rules
 
 = This is really nice script which I use on my site. Can I donate some money to author?
 
-No. This is free to use script. If you want to show appreciation, spread the work, share the link to http://pedja.supurovic.net/projekti/srbtranslatin
+No. This is free to use script. If you want to show appreciation, spread the word, share the link to http://pedja.supurovic.net/projekti/srbtranslatin
 
 == Changelog ==
 
