@@ -663,7 +663,7 @@ function stl_options_page() {
  
 }
 
-function stl_show_selector($p_selection_type, $p_oneline_separator = ' | ') {
+function stl_show_selector($p_selection_type = 'oneline', $p_oneline_separator = ' | ') {
 		$m_cir_url = url_current_add_param ('lang=cir', true);
 		$m_lat_url = url_current_add_param ('lang=lat', true);
 
