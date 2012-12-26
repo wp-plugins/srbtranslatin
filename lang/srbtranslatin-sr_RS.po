@@ -7,8 +7,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2012-12-13 00:11+0100\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-12-26 17:44+0100\n"
+"Last-Translator: Predrag Supurović <private>\n"
 "Language-Team: pedja\n"
 "X-Generator: Poedit 1.5.4\n"
 "Language: serbian\n"
@@ -42,7 +42,7 @@ msgstr "ћирилица, ако је веб читач посетиоца до�
 msgid ""
 "Set script that would be used as default, if user do not make script choice"
 msgstr ""
-"Изаберите писмо које ће бити понуђено као подразумевано, ако постилац не "
+"Изаберите писмо које ће бити понуђено као подразумевано, ако посетилац не "
 "изабере друго писмо"
 
 #: srbtranslatin.php:609
@@ -103,12 +103,9 @@ msgstr "Избор писма"
 
 #: srbtranslatin_widget.php:142
 msgid "Check to make blog remember users last script selection to cookie."
-msgstr "Укључи да се избор писма чува у колачићу веб читача корсиника."
+msgstr "Укључи да се избор писма чува у колачићу веб читача корисника."
 
 #: srbtranslatin_widget.php:142
-msgid ""
-"Check to make blog autocreate permalinks in Latin script even if title is in "
-"Cyrillic."
+msgid "Check to make permalinks in Latin alphabet regarding Serbian language."
 msgstr ""
-"Укључи да се приликом аутоматском креирања сталних линкова користи латиница "
-"чак и ако је наслов ћирилички."
+"Укључи креирање сталних линкова латинским писмом у сладу са српским језиком."

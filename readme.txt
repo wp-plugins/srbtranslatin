@@ -31,6 +31,20 @@ Initially, when new article is posted using Cyrillic script in title, permalink 
 Transliteration works for all feeds too (atom, rdf, rss, rss2).
 
 
+Using script selector on custom places
+
+If you need to put script selector in site template outside widgets areas then you can use function stl_show_selector() provided with plugin. Function accepts two parameters:
+
+stl_show_selector (selector_type, oneline_separator)
+
+selector_type chooses which type of selector to display: 
+  links - list of choices in form of widget items
+	oneline - list of script choices as one line separated by oneline_separator
+
+To use this function just call it from place where you need code to be inserted, like:
+
+<?php stl_show_selector('oneline', '/') ?>
+
 
 This plugin is developed inspired by two plugins WP Translit by Aleksandar Urošević and srlatin by Kimmo Suominen. I actually merged functionality of these two and expanded it with a lot of new functionality I needed for my site.
 
@@ -65,13 +79,21 @@ No. This is free to use script. If you want to show appreciation, spread the wor
 
 == Changelog ==
 
-= 1.20 =
+= 1.22 =
 
-Partialy rewriten code according to new Wordpress API. Also, some new functionality added.
+Fixed permalink transliteration issues with the latest Wordpress version.
+
+Added function stl_show_selector() which may be used to insert script selector anywhere in template.
+
 
 = 1.21 =
 
 Added full support for exernal language files and Serbian translation included.
+
+
+= 1.20 =
+
+Partialy rewriten code according to new Wordpress API. Also, some new functionality added.
 
 
 == Upgrade Notice ==

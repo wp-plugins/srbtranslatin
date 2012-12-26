@@ -37,7 +37,7 @@ Plugin Name: Serbian Transliteration of Cyrillic to Latin Script
 Plugin URI: http://pedja.supurovic.net/srbtranslatin/
 Description: Allows users to choose if they want to see site in Serbian Cyrillic or Serbian Latin script. After installation, check <a href="options-general.php?page=srbtranslatoptions">Settings</a>
 Author: Predrag Supurović
-Version: 1.21
+Version: 1.22
 Author URI: http://pedja.supurovic.net
 */
 
@@ -177,7 +177,7 @@ class SrbTransLatin {
 		"Ч" => "Č",
 		"Џ" => "DŽ",
 		"Ш" => "Š",
-        "а" => "a",
+    "а" => "a",
 		"б" => "b",
 		"в" => "v",
 		"г" => "g",
@@ -232,6 +232,87 @@ class SrbTransLatin {
    );
 
 
+  var $replace_sanitize = array(
+    "А" => "A",
+		"Б" => "B",
+		"В" => "V",
+		"Г" => "G",
+		"Д" => "D",
+		"Ђ" => "DJ",
+		"Е" => "E",
+		"Ж" => "Z",
+		"З" => "Z",
+		"И" => "I",
+		"Ј" => "J",
+		"К" => "K",
+		"Л" => "L",
+		"Љ" => "LJ",
+		"М" => "M",
+		"Н" => "N",
+		"Њ" => "NJ",
+		"О" => "O",
+		"П" => "P",
+		"Р" => "R",
+		"С" => "S",
+		"Ш" => "S",
+		"Т" => "T",
+		"Ћ" => "C",
+		"У" => "U",
+		"Ф" => "F",
+		"Х" => "H",
+		"Ц" => "C",
+		"Ч" => "C",
+		"Џ" => "DZ",
+		"Ш" => "S",
+    "а" => "a",
+		"б" => "b",
+		"в" => "v",
+		"г" => "g",
+		"д" => "d",
+		"ђ" => "dj",
+		"е" => "e",
+		"ж" => "z",
+		"з" => "z",
+		"и" => "i",
+		"ј" => "j",
+		"к" => "k",
+		"л" => "l",
+		"љ" => "lj",
+		"м" => "m",
+		"н" => "n",
+		"њ" => "nj",
+		"о" => "o",
+		"п" => "p",
+		"р" => "r",
+		"с" => "s",
+		"ш" => "s",
+		"т" => "t",
+		"ћ" => "c",
+		"у" => "u",
+		"ф" => "f",
+		"х" => "h",
+		"ц" => "c",
+		"ч" => "c",
+		"џ" => "dz",
+		"ш" => "s",
+		"Ња" => "Nja",
+		"Ње" => "Nje",
+		"Њи" => "Nji",
+		"Њо" => "Njo",
+		"Њу" => "Nju",
+		"Ља" => "Lja",
+		"Ље" => "Lje",
+		"Љи" => "Lji",
+		"Љо" => "Ljo",
+		"Љу" => "Lju",
+		"Џа" => "Dza",
+		"Џе" => "Dze",
+		"Џи" => "Dzi",
+		"Џо" => "Dzo",
+		"Џу" => "Dzu"
+   );
+
+
     function SrbTransLatin() {
 			global $stl_default_language;
 			global $stl_current_language;
@@ -275,59 +356,6 @@ class SrbTransLatin {
 		register_sidebar_widget("Serbian Transliteration (list)",  array (&$this,"stl_list_widget"));
 */
 	}
-
-
-
-	function stl_scripts_widget( $args ) {
-		global $stl_default_language;
-		global $stl_current_language;
-		global $stl_show_widget_title;
-		global $stl_widget_title;
-		global $stl_widget_type;
-
-		global $stl_global;
-
-		extract( $args );		
-		
-?>
-<!-- Widget Serbian Scripts -->
-<?php
-		echo $before_widget;
-		if ($stl_show_widget_title) {
-			echo $before_title . $stl_widget_title . $after_title;
-?>
-<?php
-		}
-		if ($stl_widget_type == 'list') {
-?>
-<form action="" method="post">
-<select name="lang" id="lang" onchange="this.form.submit()">
-<option value="cir" <?php echo $stl_current_language=='cir' ? 'selected="selected"' : '' ?>><lang id="skip">ћирилица</lang></option>
-<option value="lat" <?php echo $stl_current_language=='lat' ? 'selected="selected"' : '' ?>><lang id="skip">латиница</lang></option>
-</select>
-</form>
-<?php
-		} else {
-
-			$m_cir_url = url_current_add_param ('lang=cir', true);
-			$m_lat_url = url_current_add_param ('lang=lat', true);
-
-
-?>
-<ul>
-<li><a href="<?php echo $stl_default_language != '1cir' ? $m_cir_url : '' ?>"><lang id="skip">ћирилица</lang></a></li>
-<li><a href="<?php echo $stl_default_language != '1lat' ? $m_lat_url : '' ?>"><lang id="skip">latinica</lang></a></li>
-</ul>
-
-<?php
-		} // if
-?>
-
-<!-- Widget Serbian Scripts -->
-<?php
-		echo $after_widget;
-	} // function
-
 
 
 	function convert_script($text) {
@@ -374,7 +402,7 @@ class SrbTransLatin {
 		if ($term = $wpdb->get_var("SELECT slug FROM $wpdb->terms WHERE name='$title'")) 
 			return $term; 
 		else 
-			return strtr($title,$this->replace);
+			return strtr($title,$this->replace_sanitize);
 
 	}
 	
@@ -526,8 +554,9 @@ function stl_options_page() {
 	$stl_widget_title_opt_val = get_option($stl_widget_title_opt_name);
 	if (empty ($stl_widget_title_opt_val)) $stl_widget_title_opt_val = "Избор писма";
 
+
 	$stl_transliterate_title_opt_val = get_option($stl_transliterate_title_opt_name);
-	if (empty ($stl_transliterate_title_opt_val)) $stl_transliterate_title_opt_val = 'on';
+	if (empty ($stl_transliterate_title_opt_val)) $stl_transliterate_title_opt_val = 'off';
 
 	$stl_show_widget_title_opt_val = get_option($stl_show_widget_title_opt_name);	
 	if (empty ($stl_show_widget_title_opt_val)) $stl_show_widget_title_opt_val = 'off';	
@@ -617,7 +646,7 @@ function stl_options_page() {
 <tr>
 <th scope="row"><?php _e("Permalink options:", 'srbtranslatin'); ?></th>
 <td><input name="<?php echo $stl_transliterate_title_data_field_name; ?>" type="checkbox" <?php echo $stl_transliterate_title_opt_val=='on' ? 'checked="checked"' : '' ?>> <?php _e("transliterate title to permalink", 'srbtranslatin'); ?><br />
-<?php echo __('Check to make blog autocreate permalinks in Latin script even if title is in Cyrillic.', 'srbtranslatin'); ?>
+<?php echo __('Check to make permalinks in Latin alphabet regarding Serbian language.', 'srbtranslatin'); ?>
 </td>
 </tr>
 </table>
@@ -634,7 +663,51 @@ function stl_options_page() {
  
 }
 
+function stl_show_selector($p_selection_type, $p_oneline_separator = ' | ') {
+		$m_cir_url = url_current_add_param ('lang=cir', true);
+		$m_lat_url = url_current_add_param ('lang=lat', true);
 
+		switch ($p_selection_type) {
+			case 'list':
+
+
+?>
+<form action="" method="post">
+<select name="lang" id="lang" onchange="this.form.submit()">
+<option value="cir" <?php echo $m_current_language=='cir' ? 'selected="selected"' : '' ?>>[lang id="skip"]ћирилица[/lang]</option>
+<option value="lat" <?php echo $m_current_language=='lat' ? 'selected="selected"' : '' ?>>латиница</option>
+</select>
+</form>
+<?php
+				break;
+
+			case 'oneline':
+
+?>
+<p>
+<a href="<?php echo $m_cir_url; ?>">[lang id="skip"]ћирилица[/lang]</a><?php echo $p_oneline_separator; ?><a href="<?php echo $m_lat_url; ?>">латиница</a>
+</p>
+<?php
+
+				break;
+
+
+
+			default:
+
+
+?>
+<ul>
+<li><a href="<?php echo $m_cir_url; ?>">[lang id="skip"]ћирилица[/lang]</a></li>
+<li><a href="<?php echo $m_lat_url; ?>">латиница</a></li>
+</ul>
+
+<?php
+	
+	  } // switch
+
+
+}
 
 $wppSrbTransLatin =& new SrbTransLatin;
 
