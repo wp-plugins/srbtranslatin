@@ -82,6 +82,13 @@ No. Such conversion is hard if imposible due to not unique transliteration rules
 
 No. This is free to use script. If you want to show appreciation, spread the word, share the link to http://pedja.supurovic.net/projekti/srbtranslatin
 
+
+== Changelog ==
+
+= 1.23 =
+
+Minor fix. Title of 'latinica' was displayed using Cyrillic script. Changed to Latin script.
+
 == Changelog ==
 
 = 1.22 =

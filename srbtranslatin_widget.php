@@ -40,7 +40,7 @@ class SrbTransLatin_Widget extends WP_Widget {
 <form action="" method="post">
 <select name="lang" id="lang" onchange="this.form.submit()">
 <option value="cir" <?php echo $m_current_language=='cir' ? 'selected="selected"' : '' ?>>[lang id="skip"]ћирилица[/lang]</option>
-<option value="lat" <?php echo $m_current_language=='lat' ? 'selected="selected"' : '' ?>>латиница</option>
+<option value="lat" <?php echo $m_current_language=='lat' ? 'selected="selected"' : '' ?>>latinica</option>
 </select>
 </form>
 <?php
