@@ -140,7 +140,7 @@ add_action('admin_menu', 'stl_add_page');
 // Hook for adding widget
 add_action( 'widgets_init', create_function( '', 'register_widget( "srbtranslatin_widget" );' ) );
 
-add_action('wp_footer', 'show_in_footer', 100);
+//add_action('wp_footer', 'show_in_footer', 100);
 
 include ('srbtranslatin_widget.php');
 include ('urlt.php');
