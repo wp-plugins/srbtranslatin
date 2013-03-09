@@ -18,6 +18,18 @@ class SrbTransLatin_Widget extends WP_Widget {
 		$show_title = $instance['show_title'];
 		$selection_type = $instance['selection_type'];
 		$oneline_separator = $instance['oneline_separator'];
+		$cirilica_title = $instance['cirilica_title'];
+		
+		if (empty ($cirilica_title)) {
+			$cirilica_title = 'ћирилица';
+		}
+		
+		$latinica_title = $instance['latinica_title'];		
+		
+		if (empty ($latinica_title)) {
+			$latinica_title = 'latinica';
+		}
+		
 
 		echo '<span class="stl_widget">';
 		echo $before_widget;
@@ -39,8 +51,8 @@ class SrbTransLatin_Widget extends WP_Widget {
 ?>
 <form action="" method="post">
 <select name="lang" id="lang" onchange="this.form.submit()">
-<option value="cir" <?php echo $m_current_language=='cir' ? 'selected="selected"' : '' ?>>[lang id="skip"]ћирилица[/lang]</option>
-<option value="lat" <?php echo $m_current_language=='lat' ? 'selected="selected"' : '' ?>>latinica</option>
+<option value="cir" <?php echo $m_current_language=='cir' ? 'selected="selected"' : '' ?>>[lang id="skip"]<?php echo $cirilica_title; ?>[/lang]</option>
+<option value="lat" <?php echo $m_current_language=='lat' ? 'selected="selected"' : '' ?>><?php echo $latinica_title; ?></option>
 </select>
 </form>
 <?php
@@ -50,7 +62,7 @@ class SrbTransLatin_Widget extends WP_Widget {
 
 ?>
 <p>
-<a href="<?php echo $m_cir_url; ?>">[lang id="skip"]ћирилица[/lang]</a><?php echo $oneline_separator; ?><a href="<?php echo $m_lat_url; ?>">латиница</a>
+<a href="<?php echo $m_cir_url; ?>">[lang id="skip"]<?php echo $cirilica_title; ?>[/lang]</a><?php echo $oneline_separator; ?><a href="<?php echo $m_lat_url; ?>"><?php echo $latinica_title; ?></a>
 </p>
 <?php
 
@@ -63,8 +75,8 @@ class SrbTransLatin_Widget extends WP_Widget {
 
 ?>
 <ul>
-<li><a href="<?php echo $m_cir_url; ?>">[lang id="skip"]ћирилица[/lang]</a></li>
-<li><a href="<?php echo $m_lat_url; ?>">латиница</a></li>
+<li><a href="<?php echo $m_cir_url; ?>">[lang id="skip"]<?php echo $cirilica_title; ?>[/lang]</a></li>
+<li><a href="<?php echo $m_lat_url; ?>"><?php echo $latinica_title; ?></a></li>
 </ul>
 
 <?php
@@ -83,6 +95,8 @@ class SrbTransLatin_Widget extends WP_Widget {
 		$instance['show_title'] = strip_tags( $new_instance['show_title'] );
 		$instance['selection_type'] = strip_tags( $new_instance['selection_type'] );
 		$instance['oneline_separator'] = strip_tags( $new_instance['oneline_separator'] );
+		$instance['cirilica_title'] = strip_tags( $new_instance['cirilica_title'] );
+		$instance['latinica_title'] = strip_tags( $new_instance['latinica_title'] );		
 
 		return $instance;
 	}
@@ -120,6 +134,20 @@ class SrbTransLatin_Widget extends WP_Widget {
 		}
 
 
+		if ( isset( $instance[ 'cirilica_title' ] ) ) {
+			$cirilica_title = $instance[ 'cirilica_title' ];
+		}
+		else {
+			$cirilica_title = 'ћирилица';
+		}
+
+		if ( isset( $instance[ 'latinica_title' ] ) ) {
+			$latinica_title = $instance[ 'latinica_title' ];
+		}
+		else {
+			$latinica_title = 'latinica';
+		}
+
 		?>
 		<p>
 		<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
@@ -129,6 +157,19 @@ class SrbTransLatin_Widget extends WP_Widget {
 		<p>
 		<input id="<?php echo $this->get_field_id( 'show_title' ); ?>" name="<?php echo $this->get_field_name( 'show_title' ); ?>" type="checkbox" <?php echo $show_title=='on' ? 'checked="checked"' : '' ?>> <?php _e("show widget title", 'srbtranslatin'); ?>
 		</p>
+
+
+		<p>
+		<label for="<?php echo $this->get_field_id( 'cirilica_title' ); ?>"><?php _e( 'Cyril option title:' ); ?></label> 
+		<input class="widefat" id="<?php echo $this->get_field_id( 'cirilica_title' ); ?>" name="<?php echo $this->get_field_name( 'cirilica_title' ); ?>" type="text" value="<?php echo esc_attr( $cirilica_title ); ?>" />
+		</p>
+
+
+		<p>
+		<label for="<?php echo $this->get_field_id( 'latinica_title' ); ?>"><?php _e( 'Latin option title:' ); ?></label> 
+		<input class="widefat" id="<?php echo $this->get_field_id( 'latinica_title' ); ?>" name="<?php echo $this->get_field_name( 'latinica_title' ); ?>" type="text" value="<?php echo esc_attr( $latinica_title ); ?>" />
+		</p>
+		
 
 		<label for="<?php echo $this->get_field_id( 'selection_type' ); ?>"><?php _e( 'Selection type:' ); ?></label> 
 		<select id="<?php echo $this->get_field_id( 'selection_type' ); ?>" name="<?php echo $this->get_field_name( 'selection_type' ); ?>">

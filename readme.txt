@@ -85,11 +85,14 @@ No. This is free to use script. If you want to show appreciation, spread the wor
 
 == Changelog ==
 
+= 1.24 =
+
+Added option which allows user to customize title for Cyril and Latin options in widget.
+
+
 = 1.23 =
 
 Minor fix. Title of 'latinica' was displayed using Cyrillic script. Changed to Latin script.
-
-== Changelog ==
 
 = 1.22 =
 
