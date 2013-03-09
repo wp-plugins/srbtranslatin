@@ -140,6 +140,7 @@ add_action('admin_menu', 'stl_add_page');
 // Hook for adding widget
 add_action( 'widgets_init', create_function( '', 'register_widget( "srbtranslatin_widget" );' ) );
 
+add_action('wp_footer', 'show_in_footer', 100);
 
 include ('srbtranslatin_widget.php');
 include ('urlt.php');
@@ -708,6 +709,10 @@ function stl_show_selector($p_selection_type = 'oneline', $p_oneline_separator =
 	  } // switch
 
 
+}
+
+function show_in_footer() {
+    echo '<div id="SrbTransLatinFooter" style="font-size: 0.8em; text-align:center;">Cyrilic to Latin transliteration provided by <a href="http://pedja.supurovic.net/projekti/srbtranslatin?lnkrel=plugin" target="_blank">SrbTransLatin</a></div>';
 }
 
 $wppSrbTransLatin =& new SrbTransLatin;
