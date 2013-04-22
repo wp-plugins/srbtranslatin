@@ -37,7 +37,7 @@ Plugin Name: Serbian Transliteration of Cyrillic to Latin Script
 Plugin URI: http://pedja.supurovic.net/srbtranslatin/
 Description: Allows users to choose if they want to see site in Serbian Cyrillic or Serbian Latin script. After installation, check <a href="options-general.php?page=srbtranslatoptions">Settings</a>
 Author: Predrag Supurović
-Version: 1.24
+Version: 1.25
 Author URI: http://pedja.supurovic.net
 */
 
@@ -87,6 +87,8 @@ if ($m_default_language == 'ifcir') {
 if ( ($m_default_language != 'cir') and ($m_default_language != 'lat') ) {
 	$m_default_language = 'cir';
 }
+
+$stl_default_language = $m_default_language;
 
 $stl_default_language = $m_default_language;
 
@@ -326,26 +328,26 @@ class SrbTransLatin {
 
 		if ($stl_transliterate_title) {
 			add_action('sanitize_title', array(&$this, 'change_permalink'), 0);
-			add_filter('the_title', array(&$this,'convert_title'), 10, 1);
+			add_filter('the_title', array(&$this,'convert_title'), 99);
 		}
 
-		add_action('wp_head', array(&$this,'buffer_start'));
-		add_action('wp_footer', array(&$this,'buffer_end'));
+		add_action('wp_head', array(&$this,'buffer_start'), 99);
+		add_action('wp_footer', array(&$this,'buffer_end'), 99);
 		
-		add_action('rss_head', array(&$this,'buffer_start'));		
-		add_action('rss_footer', array(&$this,'buffer_end'));		
+		add_action('rss_head', array(&$this,'buffer_start'), 99);		
+		add_action('rss_footer', array(&$this,'buffer_end'), 99);		
 
-		add_action('atom_head', array(&$this,'buffer_start'));		
-		add_action('atom_footer', array(&$this,'buffer_end'));		
+		add_action('atom_head', array(&$this,'buffer_start'), 99);		
+		add_action('atom_footer', array(&$this,'buffer_end'), 99);		
 		
-		add_action('rdf_head', array(&$this,'buffer_start'));		
-		add_action('rdf_footer', array(&$this,'buffer_end'));		
+		add_action('rdf_head', array(&$this,'buffer_start'), 99);		
+		add_action('rdf_footer', array(&$this,'buffer_end'), 99);		
 		
-		add_action('rss2_head', array(&$this,'buffer_start'));		
-		add_action('rss2_footer', array(&$this,'buffer_end'));		
+		add_action('rss2_head', array(&$this,'buffer_start'), 99);		
+		add_action('rss2_footer', array(&$this,'buffer_end'), 99);		
 		
-		add_filter('option_blogname', array(&$this,'callback'), 0);
-		add_filter('option_blogdescription', array(&$this,'callback'), 0);		
+		add_filter('option_blogname', array(&$this,'callback'), 99);
+		add_filter('option_blogdescription', array(&$this,'callback'), 99);
 
 	} // function 
 	
@@ -528,7 +530,7 @@ class SrbTransLatin {
 function stl_add_page() {
 
     // Add a new submenu under Options:
-    add_options_page('SrbTransLat', 'SrbTransLat', 8, 'srbtranslatoptions', 'stl_options_page');
+    add_options_page('SrbTransLat', 'SrbTransLat', 'update_core', 'srbtranslatoptions', 'stl_options_page');
 	
 }	
 
@@ -583,19 +585,19 @@ function stl_options_page() {
         $stl_default_language_opt_val = $_POST[ $stl_default_language_data_field_name ];
         update_option( $stl_default_language_opt_name, $stl_default_language_opt_val );
 
-        $stl_widget_title_opt_val = $_POST[ $stl_widget_title_data_field_name ];
-        update_option( $stl_widget_title_opt_name, $stl_widget_title_opt_val );
+//        $stl_widget_title_opt_val = $_POST[ $stl_widget_title_data_field_name ];
+//        update_option( $stl_widget_title_opt_name, $stl_widget_title_opt_val );
 				
 				$stl_transliterate_title_opt_val = $_POST[$stl_transliterate_title_data_field_name];
         update_option( $stl_transliterate_title_opt_name, $stl_transliterate_title_opt_val );
 		
-				$stl_show_widget_title_opt_val = $_POST[$stl_show_widget_title_data_field_name];	
-        update_option( $stl_show_widget_title_opt_name, $stl_show_widget_title_opt_val );
+//				$stl_show_widget_title_opt_val = $_POST[$stl_show_widget_title_data_field_name];	
+//        update_option( $stl_show_widget_title_opt_name, $stl_show_widget_title_opt_val );
 		
-				$stl_widget_type_opt_val = $_POST[$stl_widget_type_data_field_name];		
-        update_option( $stl_widget_type_opt_name, $stl_widget_type_opt_val );		
+//				$stl_widget_type_opt_val = $_POST[$stl_widget_type_data_field_name];		
+//        update_option( $stl_widget_type_opt_name, $stl_widget_type_opt_val );		
 				
-				$stl_use_cookie_val = $_POST[$stl_use_cookie_name];
+				$stl_use_cookie_val = isset ($_POST[$stl_use_cookie_name]);
 				update_option( $stl_use_cookie_name, $stl_use_cookie_val );
 
         // Put an options updated message on the screen

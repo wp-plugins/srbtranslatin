@@ -68,12 +68,17 @@ function url_current_add_param ($p_param, $p_replace = false) {
 
 function url_current_clean_param ($p_param) {
   $m_url = "http://" . $_SERVER['HTTP_HOST']  . $_SERVER['REQUEST_URI'];
-  $m_qpos = strpos ($m_url, '?');
 
-  if ($m_qpos == true) $m_url = substr ($m_url, 0, $m_qpos);
-  $m_url = url_add_param ($m_url, $p_param); 
-  return $m_url;
+	$m_new_url = preg_replace('/([?&])' . $p_param. '=[^&]+(&|$)/','$1',$m_url);
+	$m_new_url = preg_replace('/\?$/', '', $m_new_url);
+
+  return $m_new_url;
 }
 
+
+function url_get_current () {
+  $m_url = "http://" . $_SERVER['HTTP_HOST']  . $_SERVER['REQUEST_URI'];
+  return $m_url;
+}
 
 ?>

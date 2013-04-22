@@ -18,6 +18,7 @@ class SrbTransLatin_Widget extends WP_Widget {
 		$show_title = $instance['show_title'];
 		$selection_type = $instance['selection_type'];
 		$oneline_separator = $instance['oneline_separator'];
+
 		$cirilica_title = $instance['cirilica_title'];
 		
 		if (empty ($cirilica_title)) {
@@ -39,10 +40,26 @@ class SrbTransLatin_Widget extends WP_Widget {
 ?>
 <?php
 
-		$m_current_language = $_REQUEST['lang'];
-		$m_cir_url = url_current_add_param ('lang=cir', true);
-		$m_lat_url = url_current_add_param ('lang=lat', true);
+		global $stl_default_language;
 
+		if (isset ($_REQUEST['lang'])) {
+			$m_current_language = $_REQUEST['lang'];
+		} else {
+			$m_current_language = $stl_default_language;
+		}
+
+//		if ($stl_default_language != 'cir') {
+			$m_cir_url = url_current_add_param ('lang=cir', true);
+//		} else {
+//			$m_cir_url = url_current_clean_param('lang');
+//		}
+
+
+//		if ($stl_default_language != 'lat') {
+			$m_lat_url = url_current_add_param ('lang=lat', true);
+//		} else {
+//			$m_lat_url = url_current_clean_param('lang');
+//		}
 
 		switch ($selection_type) {
 			case 'list':
