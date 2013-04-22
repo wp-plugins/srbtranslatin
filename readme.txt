@@ -90,8 +90,6 @@ No. This is free to use script. If you want to show appreciation, spread the wor
 Changed priority of the plugin so it allows other plugins to alter contents before transliteration.
 
 
-== Changelog ==
-
 = 1.24 =
 
 Added option which allows user to customize title for Cyril and Latin options in widget.
