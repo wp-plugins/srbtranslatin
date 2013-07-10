@@ -51,6 +51,24 @@ To use this function just call it from place where you need code to be inserted,
 <?php stl_show_selector('oneline', '/') ?>
 
 
+Changing image depending on selected script
+
+If you want to add image on page which contains Czrillic text and you want it to be replaced with image that contains Latin script then add =cir= as suffix in image name. On transliteration, Image name wil be changed to have =lat= as suffix.
+
+Example: filename=cir=.jpg wil be replaced with filename=lat=.jpg
+
+You have to provide Latin version image at same path as Czrillic image is placed, of course.
+
+
+Fix url colision with other plugins
+
+There are some plugings that also use default identificator 'lang', which SrbTransLatin uses to pass selected script information through url. To fix this there is an option to set this identificator. If you have problems with other plugins just change this to 'script' or 'lng', or something else as you like.
+
+Pay attention that if zou change this option, al previous urls containing script selection will become invalid. It is best to set this before site is heavily indeksed or externally linked.
+
+
+
+
 This plugin is developed inspired by two plugins WP Translit by Aleksandar Urošević and srlatin by Kimmo Suominen. I actually merged functionality of these two and expanded it with a lot of new functionality I needed for my site.
 
 
@@ -84,6 +102,12 @@ No. This is free to use script. If you want to show appreciation, spread the wor
 
 
 == Changelog ==
+
+= 1.26 =
+
+Added option to let user change script identificator in url.
+
+Added option to switch image on script change. If you use filename=cir=.jpg as image name, if latin script is selected, then image named filename=lat=.jpg will be used instead.
 
 = 1.25 =
 

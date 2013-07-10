@@ -37,7 +37,7 @@ Plugin Name: Serbian Transliteration of Cyrillic to Latin Script
 Plugin URI: http://pedja.supurovic.net/srbtranslatin/
 Description: Allows users to choose if they want to see site in Serbian Cyrillic or Serbian Latin script. After installation, check <a href="options-general.php?page=srbtranslatoptions">Settings</a>
 Author: Predrag Supurović
-Version: 1.25
+Version: 1.26
 Author URI: http://pedja.supurovic.net
 */
 
@@ -46,17 +46,27 @@ Author URI: http://pedja.supurovic.net
 /***********************************************************/
 /***********************************************************/
 
-//		global $stl_show_widget_title;
-//		global $stl_widget_title;
-//		global $stl_widget_type;
 
 load_plugin_textdomain( 'srbtranslatin', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
+
 
 $m_lang_cookie_name = 'stl_default_lang';
 
 $stl_use_cookie_name = 'stl_use_cookie';
 $stl_use_cookie_data_field_name = 'stl_use_cookie';
 $stl_use_cookie = get_option ($stl_use_cookie_name) == 'on';
+
+$stl_lang_identificator_opt_name = 'lang_identificator';
+$stl_lang_identificator_data_field_name = 'lang_identificator';
+$stl_lang_identificator = get_option ($stl_lang_identificator_opt_name);
+
+if (empty ($stl_lang_identificator)) {
+	$m_lang_identificator = 'lang';
+} else {
+	$m_lang_identificator = $stl_lang_identificator;
+}
+
+
 
 $m_cookie_language = '';
 
@@ -114,8 +124,8 @@ if ( ($stl_widget_type != 'links') and ($stl_widget_type != 'list') ) {
 	$stl_widget_type = 'links';
 }
 
-if ( isset($_REQUEST['lang']) ) {
-	$stl_current_language  = $_REQUEST['lang'];
+if ( isset($_REQUEST[$m_lang_identificator]) ) {
+	$stl_current_language  = $_REQUEST[$m_lang_identificator];
 } else {
 	$stl_current_language = $m_cookie_language;
 }
@@ -515,14 +525,27 @@ class SrbTransLatin {
 		global $stl_current_language;
 		global $stl_default_language;
 		global $g_buffer;
+		global $m_lang_identificator; 
 
 		$m_site_url = get_option('home');
 
 		if ( $m_site_url == substr ($p_urls[2], 0, strlen ($m_site_url)) ) {
-			return $p_urls[1] . url_add_param ($p_urls[2], 'lang=' . $stl_current_language, false) . $p_urls[3];
+
+			if ($stl_current_language <> $stl_default_language) {
+
+				$m_result = $p_urls[1] . url_add_param ($p_urls[2], $m_lang_identificator . '=' . $stl_current_language, false) . $p_urls[3];
+
+				$m_result = preg_replace("/\=$stl_default_language\=/", "=$stl_current_language=", $m_result); 
+
+			}
+
 		} else {
-			return $p_urls[1] . $p_urls[2] . $p_urls[3];
+
+			$m_result = $p_urls[1] . $p_urls[2] . $p_urls[3];
+
 		}
+
+    return $m_result;
 	}
 	
 	
@@ -536,6 +559,11 @@ function stl_add_page() {
 
 // mt_options_page() displays the page content for the Test Options submenu
 function stl_options_page() {
+
+	global $stl_lang_identificator_opt_name;
+	global $stl_lang_identificator_data_field_name;
+	global $stl_lang_identificator;
+
 	global $stl_default_language_opt_name;
 	global $stl_default_language_data_field_name;
 	global $stl_widget_title_opt_name;
@@ -551,7 +579,13 @@ function stl_options_page() {
 	
 	
    // Read in existing option value from database
-    $stl_default_language_opt_val = get_option( $stl_default_language_opt_name );
+
+
+  $stl_lang_identificator_opt_val = get_option( $stl_lang_identificator_opt_name );
+	if (empty ($stl_lang_identificator_opt_val)) $stl_lang_identificator_opt_val = 'lang';
+
+
+  $stl_default_language_opt_val = get_option( $stl_default_language_opt_name );
 	if (empty ($stl_default_language_opt_val)) $stl_default_language_opt_val = 'cir';
 	
 	$stl_widget_title_opt_val = get_option($stl_widget_title_opt_name);
@@ -582,21 +616,22 @@ function stl_options_page() {
     // If they did, this hidden field will be set to 'Y'
     if( ! empty ($_POST['Submit']) ) {
         // Read their posted value
+
+				if (isset ($_POST[ $stl_lang_identificator_data_field_name ])) {
+	        $stl_lang_identificator_opt_val = $_POST[ $stl_lang_identificator_data_field_name ];
+				} else {
+					$stl_lang_identificator_opt_val = 'lang';
+				}
+        update_option( $stl_lang_identificator_opt_name, $stl_lang_identificator_opt_val );
+
         $stl_default_language_opt_val = $_POST[ $stl_default_language_data_field_name ];
         update_option( $stl_default_language_opt_name, $stl_default_language_opt_val );
 
-//        $stl_widget_title_opt_val = $_POST[ $stl_widget_title_data_field_name ];
-//        update_option( $stl_widget_title_opt_name, $stl_widget_title_opt_val );
 				
 				$stl_transliterate_title_opt_val = $_POST[$stl_transliterate_title_data_field_name];
         update_option( $stl_transliterate_title_opt_name, $stl_transliterate_title_opt_val );
 		
-//				$stl_show_widget_title_opt_val = $_POST[$stl_show_widget_title_data_field_name];	
-//        update_option( $stl_show_widget_title_opt_name, $stl_show_widget_title_opt_val );
-		
-//				$stl_widget_type_opt_val = $_POST[$stl_widget_type_data_field_name];		
-//        update_option( $stl_widget_type_opt_name, $stl_widget_type_opt_val );		
-				
+
 				$stl_use_cookie_val = isset ($_POST[$stl_use_cookie_name]);
 				update_option( $stl_use_cookie_name, $stl_use_cookie_val );
 
@@ -627,6 +662,15 @@ function stl_options_page() {
 
 <form name="form1" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
 <table class="form-table">
+
+<tr>
+<th scope="row"><?php _e("Script identificator:", 'srbtranslatin'); ?></th>
+<td><input name="<?php echo $stl_lang_identificator_data_field_name; ?>" type="text" value="<?php echo $stl_lang_identificator_opt_val; ?>"?><br />
+<?php echo __('Set what identificator for script selection will be used in urls.', 'srbtranslatin'); ?>
+</td>
+</tr>
+
+
 <tr>
 <th scope="row"><?php _e("Default script:", 'srbtranslatin'); ?></th>
 <td>
@@ -667,9 +711,11 @@ function stl_options_page() {
 }
 
 function stl_show_selector($p_selection_type = 'oneline', $p_oneline_separator = ' | ') {
-		$m_current_language = $_REQUEST['lang'];
-		$m_cir_url = url_current_add_param ('lang=cir', true);
-		$m_lat_url = url_current_add_param ('lang=lat', true);
+	global $m_lang_identificator;
+
+		$m_current_language = $_REQUEST[$m_lang_identificator];
+		$m_cir_url = url_current_add_param ($m_lang_identificator. '=cir', true);
+		$m_lat_url = url_current_add_param ($m_lang_identificator . '=lat', true);
 
 		switch ($p_selection_type) {
 			case 'list':
@@ -677,7 +723,7 @@ function stl_show_selector($p_selection_type = 'oneline', $p_oneline_separator =
 
 ?>
 <form action="" method="post">
-<select name="lang" id="lang" onchange="this.form.submit()">
+<select name="<?php echo $m_lang_identificator; ?>" id="lang" onchange="this.form.submit()">
 <option value="cir" <?php echo $m_current_language=='cir' ? 'selected="selected"' : '' ?>>[lang id="skip"]ћирилица[/lang]</option>
 <option value="lat" <?php echo $m_current_language=='lat' ? 'selected="selected"' : '' ?>>латиница</option>
 </select>

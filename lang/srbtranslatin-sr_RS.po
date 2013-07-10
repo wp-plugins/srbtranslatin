@@ -7,10 +7,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2013-03-09 13:24+0100\n"
+"PO-Revision-Date: 2013-07-10 19:58+0100\n"
 "Last-Translator: Predrag Supurović <private>\n"
 "Language-Team: pedja\n"
-"X-Generator: Poedit 1.5.5\n"
+"X-Generator: Poedit 1.5.7\n"
 "Language: serbian\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
@@ -64,6 +64,15 @@ msgstr "преслови наслов у стални линк"
 #: srbtranslatin.php:625
 msgid "Update Options"
 msgstr "Сними подешавање"
+
+#: srbtranslatin.php:625
+msgid "Script identificator:"
+msgstr "Идентификатор писма:"
+
+#: srbtranslatin.php:625
+msgid "Set what identificator for script selection will be used in urls."
+msgstr ""
+"Упишите идентификатор који ће бити употребљен за ознаку писма у веб адреси."
 
 #: srbtranslatin_widget.php:10
 msgid "SrbTransLatin Script Selector"

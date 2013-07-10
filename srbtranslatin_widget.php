@@ -13,6 +13,9 @@ class SrbTransLatin_Widget extends WP_Widget {
 
 
 	public function widget( $args, $instance ) {
+
+		global $m_lang_identificator;
+
 		extract( $args );
 		$title = apply_filters( 'widget_title', $instance['title'] );
 		$show_title = $instance['show_title'];
@@ -42,24 +45,15 @@ class SrbTransLatin_Widget extends WP_Widget {
 
 		global $stl_default_language;
 
-		if (isset ($_REQUEST['lang'])) {
-			$m_current_language = $_REQUEST['lang'];
+		if (isset ($_REQUEST[$m_lang_identificator])) {
+			$m_current_language = $_REQUEST[$m_lang_identificator];
 		} else {
 			$m_current_language = $stl_default_language;
 		}
 
-//		if ($stl_default_language != 'cir') {
-			$m_cir_url = url_current_add_param ('lang=cir', true);
-//		} else {
-//			$m_cir_url = url_current_clean_param('lang');
-//		}
+		$m_cir_url = url_current_add_param ($m_lang_identificator . '=cir', true);
 
-
-//		if ($stl_default_language != 'lat') {
-			$m_lat_url = url_current_add_param ('lang=lat', true);
-//		} else {
-//			$m_lat_url = url_current_clean_param('lang');
-//		}
+		$m_lat_url = url_current_add_param ($m_lang_identificator . '=lat', true);
 
 		switch ($selection_type) {
 			case 'list':
@@ -67,7 +61,7 @@ class SrbTransLatin_Widget extends WP_Widget {
 
 ?>
 <form action="" method="post">
-<select name="lang" id="lang" onchange="this.form.submit()">
+<select name="<?php echo $m_lang_identificator; ?>" id="lang" onchange="this.form.submit()">
 <option value="cir" <?php echo $m_current_language=='cir' ? 'selected="selected"' : '' ?>>[lang id="skip"]<?php echo $cirilica_title; ?>[/lang]</option>
 <option value="lat" <?php echo $m_current_language=='lat' ? 'selected="selected"' : '' ?>><?php echo $latinica_title; ?></option>
 </select>
