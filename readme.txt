@@ -9,7 +9,7 @@ SrbTransLatin handles using Serbian language Cyrillic and Latin script. For Cyri
 
 == Description ==
 
-Contents of the site should be written using Cyrillic script. Then, this plugin will allow users to choose to read contents in Cyrollic or Latin script.
+Contents of the site should be written using Cyrillic script. Then, this plugin will allow users to choose to read contents in Cyrillic or Latin script.
 
 If some contents is entered in Latin script, it would stay in Latin even if user chooses to use Cyrillic. Transliteration occurs only from Cyrillic to Latin script.
 
@@ -39,13 +39,13 @@ stl_show_selector (selector_type, oneline_separator, cyrillic_caption, latin_cap
 
 selector_type chooses which type of selector to display: 
 
-	- links - list of choices in form of widget items
+- links - list of choices in form of widget items
 
-	- list - list of choices in form of dropdown selection
+- list - list of choices in form of dropdown selection
 
-	- oneline - list of choices as one line separated by oneline_separator
+- oneline - list of choices as one line separated by oneline_separator
 	
-	Default value is 'oneline'
+Default value is 'oneline'
 	
 	
 oneline_separator is a string that should be inservted between script selection items. Default value is '/'.
