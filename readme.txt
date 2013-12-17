@@ -31,7 +31,7 @@ Initially, when new article is posted using Cyrillic script in title, permalink 
 Transliteration works for all feeds too (atom, rdf, rss, rss2).
 
 
-Using script selector on custom places
+**Using script selector on custom places**
 
 If you need to put script selector in site template outside widgets areas then you can use function stl_show_selector() provided with plugin. Function accepts four parameters (all optional):
 
@@ -56,10 +56,10 @@ latin_caption is a string that should be used as caption for item of latin sleec
 
 To use this function just call it from place where you need code to be inserted, like:
 
-<?php stl_show_selector('oneline', '/', 'ћирилица', 'латиница') ?>
+`<?php stl_show_selector('oneline', '/', 'ћирилица', 'латиница') ?>`
 
 
-Changing image depending on selected script
+**Changing image depending on selected script**
 
 If you want to add image on page which contains Czrillic text and you want it to be replaced with image that contains Latin script then add =cir= as suffix in image name. On transliteration, Image name wil be changed to have =lat= as suffix.
 
@@ -68,7 +68,7 @@ Example: filename=cir=.jpg wil be replaced with filename=lat=.jpg
 You have to provide Latin version image at same path as Czrillic image is placed, of course.
 
 
-Fix url colision with other plugins
+***Fix url colision with other plugins**
 
 There are some plugings that also use default identificator 'lang', which SrbTransLatin uses to pass selected script information through url. To fix this there is an option to set this identificator. If you have problems with other plugins just change this to 'script' or 'lng', or something else as you like.
 
