@@ -2,7 +2,7 @@
 Contributors: pedjas
 Tags: transliteration, serbian, cyrillic, latin, multilanguage, script
 Requires at least: 2.6.1
-Tested up to: 3.5
+Tested up to: 3.8
 Stable tag: trunk
 
 SrbTransLatin handles using Serbian language Cyrillic and Latin script. For Cyrillic content, visitor may choose to view it using Cyrillic or Latin.
@@ -33,9 +33,9 @@ Transliteration works for all feeds too (atom, rdf, rss, rss2).
 
 Using script selector on custom places
 
-If you need to put script selector in site template outside widgets areas then you can use function stl_show_selector() provided with plugin. Function accepts two parameters:
+If you need to put script selector in site template outside widgets areas then you can use function stl_show_selector() provided with plugin. Function accepts four parameters (all optional):
 
-stl_show_selector (selector_type, oneline_separator)
+stl_show_selector (selector_type, oneline_separator, cyrillic_caption, latin_caption)
 
 selector_type chooses which type of selector to display: 
 
@@ -44,11 +44,19 @@ selector_type chooses which type of selector to display:
 	- list - list of choices in form of dropdown selection
 
 	- oneline - list of choices as one line separated by oneline_separator
+	
+	Default value is 'oneline'
+	
+	
+oneline_separator is a string that should be inservted between script selection items. Default value is '/'.
 
+cirillic_caption is a string that should be used as caption for item of cyrillic sleection. Default is 'ћирилица'
+
+latin_caption is a string that should be used as caption for item of latin sleection. Default is 'латиница'
 
 To use this function just call it from place where you need code to be inserted, like:
 
-<?php stl_show_selector('oneline', '/') ?>
+<?php stl_show_selector('oneline', '/', 'ћирилица', 'латиница') ?>
 
 
 Changing image depending on selected script
@@ -69,7 +77,7 @@ Pay attention that if zou change this option, al previous urls containing script
 
 
 
-This plugin is developed inspired by two plugins WP Translit by Aleksandar Urošević and srlatin by Kimmo Suominen. I actually merged functionality of these two and expanded it with a lot of new functionality I needed for my site.
+This plugin is developed inspired by two plugins WP Translit by Aleksandar Urošević and srlatin by Kimmo Suominen. I actually merged functionality of these two and expanded it with a lot of new functionality I needed for my site, and later with new functionality asked by plugin users.
 
 
 
@@ -102,6 +110,10 @@ No. This is free to use script. If you want to show appreciation, spread the wor
 
 
 == Changelog ==
+
+= 1.27 =
+
+Function stl_show_selector() expanded with two new parameters allowing setting captions for script selection items.
 
 = 1.26 =
 

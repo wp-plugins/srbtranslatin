@@ -37,7 +37,7 @@ Plugin Name: Serbian Transliteration of Cyrillic to Latin Script
 Plugin URI: http://pedja.supurovic.net/srbtranslatin/
 Description: Allows users to choose if they want to see site in Serbian Cyrillic or Serbian Latin script. After installation, check <a href="options-general.php?page=srbtranslatoptions">Settings</a>
 Author: Predrag Supurović
-Version: 1.26
+Version: 1.27
 Author URI: http://pedja.supurovic.net
 */
 
@@ -710,10 +710,15 @@ function stl_options_page() {
  
 }
 
-function stl_show_selector($p_selection_type = 'oneline', $p_oneline_separator = ' | ') {
+function stl_show_selector($p_selection_type = 'oneline', $p_oneline_separator = ' | ', $p_cirilica_title = 'ћирилица', $p_latinica_title = 'латиница') {
 	global $m_lang_identificator;
+	global $m_default_language;
 
-		$m_current_language = $_REQUEST[$m_lang_identificator];
+    if (isset ($_REQUEST[$m_lang_identificator])) {
+			$m_current_language = $_REQUEST[$m_lang_identificator];
+		} else {
+  		$m_current_language = $m_default_language;
+		}
 		$m_cir_url = url_current_add_param ($m_lang_identificator. '=cir', true);
 		$m_lat_url = url_current_add_param ($m_lang_identificator . '=lat', true);
 
@@ -724,8 +729,8 @@ function stl_show_selector($p_selection_type = 'oneline', $p_oneline_separator =
 ?>
 <form action="" method="post">
 <select name="<?php echo $m_lang_identificator; ?>" id="lang" onchange="this.form.submit()">
-<option value="cir" <?php echo $m_current_language=='cir' ? 'selected="selected"' : '' ?>>[lang id="skip"]ћирилица[/lang]</option>
-<option value="lat" <?php echo $m_current_language=='lat' ? 'selected="selected"' : '' ?>>латиница</option>
+<option value="cir" <?php echo $m_current_language=='cir' ? 'selected="selected"' : '' ?>>[lang id="skip"]<?php echo $p_cirilica_title; ?>[/lang]</option>
+<option value="lat" <?php echo $m_current_language=='lat' ? 'selected="selected"' : '' ?>><?php echo $p_latinica_title; ?></option>
 </select>
 </form>
 <?php
@@ -735,7 +740,7 @@ function stl_show_selector($p_selection_type = 'oneline', $p_oneline_separator =
 
 ?>
 <p>
-<a href="<?php echo $m_cir_url; ?>">[lang id="skip"]ћирилица[/lang]</a><?php echo $p_oneline_separator; ?><a href="<?php echo $m_lat_url; ?>">латиница</a>
+<a href="<?php echo $m_cir_url; ?>">[lang id="skip"]<?php echo $p_cirilica_title; ?>[/lang]</a><?php echo $p_oneline_separator; ?><a href="<?php echo $m_lat_url; ?>"><?php echo $p_latinica_title; ?></a>
 </p>
 <?php
 
@@ -748,8 +753,8 @@ function stl_show_selector($p_selection_type = 'oneline', $p_oneline_separator =
 
 ?>
 <ul>
-<li><a href="<?php echo $m_cir_url; ?>">[lang id="skip"]ћирилица[/lang]</a></li>
-<li><a href="<?php echo $m_lat_url; ?>">латиница</a></li>
+<li><a href="<?php echo $m_cir_url; ?>">[lang id="skip"]<?php echo $p_cirilica_title; ?>[/lang]</a></li>
+<li><a href="<?php echo $m_lat_url; ?>"><?php echo $p_latinica_title; ?></a></li>
 </ul>
 
 <?php
@@ -763,6 +768,6 @@ function show_in_footer() {
     echo '<div id="SrbTransLatinFooter" style="font-size: 0.8em; text-align:center;">Cyrilic to Latin transliteration provided by <a href="http://pedja.supurovic.net/projekti/srbtranslatin?lnkrel=plugin" target="_blank">SrbTransLatin</a></div>';
 }
 
-$wppSrbTransLatin =& new SrbTransLatin;
+$wppSrbTransLatin = new SrbTransLatin;
 
 ?>
