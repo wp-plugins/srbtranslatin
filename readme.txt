@@ -37,7 +37,7 @@ If you need to put script selector in site template outside widgets areas then y
 
 stl_show_selector (selector_type, oneline_separator, cyrillic_caption, latin_caption)
 
-selector_type chooses which type of selector to display: 
+*selector_type* chooses which type of selector to display: 
 
 - links - list of choices in form of widget items
 
@@ -48,11 +48,11 @@ selector_type chooses which type of selector to display:
 Default value is 'oneline'
 	
 	
-oneline_separator is a string that should be inservted between script selection items. Default value is '/'.
+*oneline_separator* is a string that should be inservted between script selection items. Default value is '/'.
 
-cirillic_caption is a string that should be used as caption for item of cyrillic sleection. Default is 'ћирилица'
+*cirillic_caption* is a string that should be used as caption for item of cyrillic sleection. Default is 'ћирилица'
 
-latin_caption is a string that should be used as caption for item of latin sleection. Default is 'латиница'
+*latin_caption* is a string that should be used as caption for item of latin sleection. Default is 'латиница'
 
 To use this function just call it from place where you need code to be inserted, like:
 
