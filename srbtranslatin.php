@@ -37,7 +37,7 @@ Plugin Name: Serbian Transliteration of Cyrillic to Latin Script
 Plugin URI: http://pedja.supurovic.net/srbtranslatin/
 Description: Allows users to choose if they want to see site in Serbian Cyrillic or Serbian Latin script. After installation, check <a href="options-general.php?page=srbtranslatoptions">Settings</a>
 Author: Predrag Supurović
-Version: 1.27
+Version: 1.28
 Author URI: http://pedja.supurovic.net
 */
 
@@ -54,7 +54,10 @@ $m_lang_cookie_name = 'stl_default_lang';
 
 $stl_use_cookie_name = 'stl_use_cookie';
 $stl_use_cookie_data_field_name = 'stl_use_cookie';
-$stl_use_cookie = get_option ($stl_use_cookie_name) == 'on';
+
+$stl_use_cookie = get_option ($stl_use_cookie_name);
+
+//echo "stl_use_cookie=$stl_use_cookie<br>";
 
 $stl_lang_identificator_opt_name = 'lang_identificator';
 $stl_lang_identificator_data_field_name = 'lang_identificator';
@@ -606,7 +609,7 @@ function stl_options_page() {
 	
 	$stl_use_cookie_val = get_option($stl_use_cookie_name);	
 	
-//echo "stl_use_cookie_val=$stl_use_cookie_val<br>";	
+//echo "1stl_use_cookie_val=$stl_use_cookie_val<br>";	
 
 //echo "post<pre>";
 //print_r ($_POST);
@@ -632,7 +635,10 @@ function stl_options_page() {
         update_option( $stl_transliterate_title_opt_name, $stl_transliterate_title_opt_val );
 		
 
-				$stl_use_cookie_val = isset ($_POST[$stl_use_cookie_name]);
+				$stl_use_cookie_val = isset ($_POST[$stl_use_cookie_data_field_name]);
+
+//echo "2stl_use_cookie_val=$stl_use_cookie_val<br>";	
+
 				update_option( $stl_use_cookie_name, $stl_use_cookie_val );
 
         // Put an options updated message on the screen
@@ -643,7 +649,7 @@ function stl_options_page() {
 
     }
 		
-		if (empty ($stl_use_cookie_val)) $stl_use_cookie_val = 'off';			
+		if (empty ($stl_use_cookie_val)) $stl_use_cookie_val = 0;			
 
 
 //echo "stl_use_cookie_val=$stl_use_cookie_val<br>";	
@@ -685,7 +691,7 @@ function stl_options_page() {
 
 <tr>
 <th scope="row"><?php _e("Use cookie:", 'srbtranslatin'); ?></th>
-<td><input name="<?php echo $stl_use_cookie_name; ?>" type="checkbox" <?php echo $stl_use_cookie_val=='on' ? 'checked="checked"' : '' ?>> <?php _e("use cookie", 'srbtranslatin'); ?><br />
+<td><input name="<?php echo $stl_use_cookie_data_field_name; ?>" type="checkbox" <?php echo $stl_use_cookie_val==1 ? 'checked="checked"' : '' ?>> <?php _e("use cookie", 'srbtranslatin'); ?><br />
 <?php echo __('Check to make blog remember users last script selection to cookie.', 'srbtranslatin'); ?>
 </td>
 </tr>

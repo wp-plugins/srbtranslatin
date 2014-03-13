@@ -2,7 +2,7 @@
 Contributors: pedjas
 Tags: transliteration, serbian, cyrillic, latin, multilanguage, script
 Requires at least: 2.6.1
-Tested up to: 3.8
+Tested up to: 3.8.1
 Stable tag: trunk
 
 SrbTransLatin handles using Serbian language Cyrillic and Latin script. For Cyrillic content, visitor may choose to view it using Cyrillic or Latin.
@@ -110,6 +110,11 @@ No. This is free to use script. If you want to show appreciation, spread the wor
 
 
 == Changelog ==
+
+= 1.28 =
+
+Fixed displaying cookie using state setting option.
+
 
 = 1.27 =
 
