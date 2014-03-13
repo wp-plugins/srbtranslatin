@@ -631,7 +631,7 @@ function stl_options_page() {
         update_option( $stl_default_language_opt_name, $stl_default_language_opt_val );
 
 				
-				$stl_transliterate_title_opt_val = $_POST[$stl_transliterate_title_data_field_name];
+				$stl_transliterate_title_opt_val = isset ($_POST[$stl_transliterate_title_data_field_name]);
         update_option( $stl_transliterate_title_opt_name, $stl_transliterate_title_opt_val );
 		
 
