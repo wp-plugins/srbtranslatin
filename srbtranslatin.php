@@ -37,7 +37,7 @@ Plugin Name: Serbian Transliteration of Cyrillic to Latin Script
 Plugin URI: http://pedja.supurovic.net/srbtranslatin/
 Description: Allows users to choose if they want to see site in Serbian Cyrillic or Serbian Latin script. After installation, check <a href="options-general.php?page=srbtranslatoptions">Settings</a>
 Author: Predrag Supurović
-Version: 1.28
+Version: 1.29
 Author URI: http://pedja.supurovic.net
 */
 
@@ -46,6 +46,15 @@ Author URI: http://pedja.supurovic.net
 /***********************************************************/
 /***********************************************************/
 
+$stl_priority =  99;
+
+$m_config_file = dirname( plugin_dir_path( __FILE__ ) ) . '/' . dirname( plugin_basename( __FILE__ )) . '/config.php';
+
+
+if (file_exists ($m_config_file)) {
+	include ($m_config_file);
+	$stl_priority = $stl_config['priority'];
+}
 
 load_plugin_textdomain( 'srbtranslatin', false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
 
@@ -333,6 +342,7 @@ class SrbTransLatin {
 			global $stl_default_language;
 			global $stl_current_language;
 			global $stl_transliterate_title;
+			global $stl_priority;
 			
 			
 	
@@ -340,27 +350,28 @@ class SrbTransLatin {
 		add_action("plugins_loaded",array(&$this,"init_lang"));
 
 		if ($stl_transliterate_title) {
-			add_action('sanitize_title', array(&$this, 'change_permalink'), 0);
-			add_filter('the_title', array(&$this,'convert_title'), 99);
+			//add_action('sanitize_title', array(&$this, 'change_permalink'), 0);
+      add_action('sanitize_title', array(&$this, 'convert_title'), $stl_priority);
+			add_filter('the_title', array(&$this,'convert_title'), $stl_priority);
 		}
 
-		add_action('wp_head', array(&$this,'buffer_start'), 99);
-		add_action('wp_footer', array(&$this,'buffer_end'), 99);
+		add_action('wp_head', array(&$this,'buffer_start'), $stl_priority);
+		add_action('wp_footer', array(&$this,'buffer_end'), $stl_priority);
 		
-		add_action('rss_head', array(&$this,'buffer_start'), 99);		
-		add_action('rss_footer', array(&$this,'buffer_end'), 99);		
+		add_action('rss_head', array(&$this,'buffer_start'), $stl_priority);		
+		add_action('rss_footer', array(&$this,'buffer_end'), $stl_priority);		
 
-		add_action('atom_head', array(&$this,'buffer_start'), 99);		
-		add_action('atom_footer', array(&$this,'buffer_end'), 99);		
+		add_action('atom_head', array(&$this,'buffer_start'), $stl_priority);		
+		add_action('atom_footer', array(&$this,'buffer_end'), $stl_priority);		
 		
-		add_action('rdf_head', array(&$this,'buffer_start'), 99);		
-		add_action('rdf_footer', array(&$this,'buffer_end'), 99);		
+		add_action('rdf_head', array(&$this,'buffer_start'), $stl_priority);		
+		add_action('rdf_footer', array(&$this,'buffer_end'), $stl_priority);		
 		
-		add_action('rss2_head', array(&$this,'buffer_start'), 99);		
-		add_action('rss2_footer', array(&$this,'buffer_end'), 99);		
+		add_action('rss2_head', array(&$this,'buffer_start'), $stl_priority);		
+		add_action('rss2_footer', array(&$this,'buffer_end'), $stl_priority);		
 		
-		add_filter('option_blogname', array(&$this,'callback'), 99);
-		add_filter('option_blogdescription', array(&$this,'callback'), 99);
+		add_filter('option_blogname', array(&$this,'callback'), $stl_priority);
+		add_filter('option_blogdescription', array(&$this,'callback'), $stl_priority);
 
 	} // function 
 	
