@@ -85,7 +85,7 @@ There is config?example.php in SrbTransLatin direcotry. User should copy that to
 
 $stl_config['priority'] = 9999;
 
-User may change number 9999 to any other. Greater is lower prioity, meaning exexuting afer plugins with higher priroty.
+User may change number 9999 to any other. Greater number is lower priority, meaning exexuting after plugins with lower number.
 
 
 This plugin is developed inspired by two plugins WP Translit by Aleksandar Urošević and srlatin by Kimmo Suominen. I actually merged functionality of these two and expanded it with a lot of new functionality I needed for my site, and later with new functionality asked by plugin users.
