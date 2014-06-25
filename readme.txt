@@ -120,7 +120,7 @@ This happens on some installations. It seems it is dependable on template used, 
 
 = I use multilanguange plugin along with SrbTransLatin, but it does not work well? =
 
-Usualy there is interference with url parameter name. Try changing default script identificatin in SrbTransLatin options.
+Usually, problems with multilanguage plugins is interference with url parameter name. Try changing default script identificatin in SrbTransLatin options.
 
 = When I change to nondefault script some images are not shown on page? =
 
@@ -128,27 +128,27 @@ Use latin alphabet in image file names only. If you use Cyrillic letters in file
 
 = I have some images on page that I want to switch from Cyrillic and Latin version along with text contents? =
 
-Prepare original image with Cyrillic contents by adding keyword =cir= in image file name, for example myimage=cir=.jpg. Prepare Latin version of the same image naming it using =lat= kezword, like myimage=cir=.jpg. When page is displayed, image will be loaded regarding selected script.
+Prepare original image with Cyrillic contents by adding keyword =cir= in image file name, for example myimage=cir=.jpg. Prepare Latin version of the same image naming it using =lat= keyword, like myimage=lat=.jpg. When page is displayed, image will be loaded regarding selected script.
 
-= How to prevent part of the text to be transliterated to latin? ==
+= How to prevent part of the text to be transliterated to latin? =
 
 Place text you do not want to be transliterated into block surrounded by [lang id="skip"] and [/lang]. Example: [lang id="skip"]this text will not be transliterated[/lang]
 
-= Some contents of the page does not work properly when SrbTransALtin is active? ==
+= Some contents of the page does not work properly when SrbTransLatin is active? =
 
-If you use some JavaScript on page and it autogenerates objects using page contenst, it may hapen that JavaScript uses Cyrillic contents in object names. when SrbTransLatin renders page it would process all Cyrillic contents including JavaScript. Make sure that IDs of objects (images especially) are not in Cyrillic script.
+If you use some JavaScript on page and it autogenerates objects using page contenst, it may hapen that JavaScript uses Cyrillic contents in object names. When SrbTransLatin renders page it would process all Cyrillic contents including JavaScript. Make sure that IDs of objects (images especially) are not in Cyrillic script.
 
 = Some contents of thepage is not transliterated to latin? =
 
-- Check if you did not use [lang id="skip"] and [/lang] on that block of text
+- Check if you used [lang id="skip"] and [/lang] on that block of text
 
-- Make sure your plugin is run with lowest priority so it process page contentas after it is all generated.
+- Make sure your plugin is run with lowest priority so it process page contents after it is all generated bz other plugins.
 
-- Contents of page which is dynamically generated cannot be transliterated using SrbTransLatin.
+- Contents of page which is dynamically generated (JavaScript or so) cannot be transliterated using SrbTransLatin.
 
-= Search option finds contents only if it matches search keyword script. Is it possible that it find everything regardless of the script? ==
+= Search option finds contents only if it matches search keyword script. Is it possible that it find everything regardless of the script? =
 
-Search is done in database, not in Wordpress code. It does not provide means to disregard scripts in search keywords without significant reconfiguration of database server. Most hosting services do not even allow such reconfiguration.
+Search is done in database, not in Wordpress code. Database does not provide means to disregard scripts in search keywords without significant reconfiguration of database server. Most hosting services do not even allow such reconfiguration.
 
 = I want to show script selection in custom template, not by widget. Is it possible? =
 
