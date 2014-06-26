@@ -37,7 +37,7 @@ Plugin Name: Serbian Transliteration of Cyrillic to Latin Script
 Plugin URI: http://pedja.supurovic.net/srbtranslatin/
 Description: Allows users to choose if they want to see site in Serbian Cyrillic or Serbian Latin script. After installation, check <a href="options-general.php?page=srbtranslatoptions">Settings</a>
 Author: Predrag Supurović
-Version: 1.29
+Version: 1.30
 Author URI: http://pedja.supurovic.net
 */
 
@@ -350,8 +350,8 @@ class SrbTransLatin {
 		add_action("plugins_loaded",array(&$this,"init_lang"));
 
 		if ($stl_transliterate_title) {
-			//add_action('sanitize_title', array(&$this, 'change_permalink'), 0);
-      add_action('sanitize_title', array(&$this, 'convert_title'), $stl_priority);
+			add_action('sanitize_title', array(&$this, 'change_permalink'), 0);
+      //add_action('sanitize_title', array(&$this, 'convert_title'), $stl_priority);
 			add_filter('the_title', array(&$this,'convert_title'), $stl_priority);
 		}
 

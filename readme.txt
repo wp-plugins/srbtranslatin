@@ -161,6 +161,11 @@ No. This is free to use script. If you want to show appreciation, spread the wor
 
 == Changelog ==
 
+= 1.30 =
+
+Fixed bug with transliterating title to permalink
+
+
 = 1.29 =
 
 Added external configuration using config.php
