@@ -161,6 +161,13 @@ No. This is free to use script. If you want to show appreciation, spread the wor
 
 == Changelog ==
 
+= 1.31 =
+
+Fixed bug with transliterating title to permalink option in settings
+
+Added helper for conflicts with WPML. WPML uses 'lang' as language identificator which is the same as default for SrbTransLatin. Now if WPML is installed default changes to 'script', and if identificator is set to 'lang' warning is shown to user.
+
+
 = 1.30 =
 
 Fixed bug with transliterating title to permalink

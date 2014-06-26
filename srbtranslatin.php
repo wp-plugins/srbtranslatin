@@ -1,7 +1,7 @@
 <?php
 /*
  *
- * Copyright (c) 2008-2010 Predrag Supurović
+ * Copyright (c) 2008-2014 Predrag Supurović
  *
  * All rights reserved.
  *
@@ -37,7 +37,7 @@ Plugin Name: Serbian Transliteration of Cyrillic to Latin Script
 Plugin URI: http://pedja.supurovic.net/srbtranslatin/
 Description: Allows users to choose if they want to see site in Serbian Cyrillic or Serbian Latin script. After installation, check <a href="options-general.php?page=srbtranslatoptions">Settings</a>
 Author: Predrag Supurović
-Version: 1.30
+Version: 1.31
 Author URI: http://pedja.supurovic.net
 */
 
@@ -72,13 +72,24 @@ $stl_lang_identificator_opt_name = 'lang_identificator';
 $stl_lang_identificator_data_field_name = 'lang_identificator';
 $stl_lang_identificator = get_option ($stl_lang_identificator_opt_name);
 
+$m_wpml_plugin_file = dirname( plugin_dir_path( __FILE__ ) ) . '/' .'sitepress-multilingual-cms/sitepress.php';
+//echo "m_wpml_plugin_file=$m_wpml_plugin_file!";
+
+//$stl_wpml_plugin_active = is_plugin_active('wpml/wpml.php');
+$stl_wpml_plugin_active = file_exists($m_wpml_plugin_file);
+//echo "stl_wpml_plugin_active=$stl_wpml_plugin_active";
+
+
 if (empty ($stl_lang_identificator)) {
-	$m_lang_identificator = 'lang';
+
+	if ( $stl_wpml_plugin_active ) {
+		$m_lang_identificator = 'script';
+	} else {
+		$m_lang_identificator = 'lang';
+	}
 } else {
 	$m_lang_identificator = $stl_lang_identificator;
 }
-
-
 
 $m_cookie_language = '';
 
@@ -118,7 +129,7 @@ $stl_default_language = $m_default_language;
 
 $stl_transliterate_title_opt_name = 'stl_transliterate_title';
 $stl_transliterate_title_data_field_name = 'stl_transliterate_title';
-$stl_transliterate_title = get_option( $stl_transliterate_title_opt_name ) == 'on';
+$stl_transliterate_title = get_option( $stl_transliterate_title_opt_name ) == '1';
 
 $stl_widget_title_opt_name = 'stl_widget_title';
 $stl_widget_title_data_field_name = 'stl_widget_title';
@@ -349,6 +360,10 @@ class SrbTransLatin {
 		
 		add_action("plugins_loaded",array(&$this,"init_lang"));
 
+		$m_plugin = plugin_basename(__FILE__);
+		add_filter("plugin_action_links_$m_plugin", array(&$this, 'plugin_settings_link') );
+
+
 		if ($stl_transliterate_title) {
 			add_action('sanitize_title', array(&$this, 'change_permalink'), 0);
       //add_action('sanitize_title', array(&$this, 'convert_title'), $stl_priority);
@@ -383,6 +398,13 @@ class SrbTransLatin {
 		register_sidebar_widget("Serbian Transliteration (list)",  array (&$this,"stl_list_widget"));
 */
 	}
+
+	public function plugin_settings_link($p_links) {
+		$m_settings_link = '<a href="options-general.php?page=srbtranslatoptions">' . _('Settings') . '</a>';
+		array_unshift($p_links, $m_settings_link);
+		return $p_links;
+	}	
+
 
 
 	function convert_script($text) {
@@ -590,6 +612,7 @@ function stl_options_page() {
 	global $stl_widget_type_data_field_name;
 	global $stl_use_cookie_name;
 	global $stl_use_cookie_data_field_name;
+	global $stl_wpml_plugin_active;
 	
 	
    // Read in existing option value from database
@@ -684,6 +707,13 @@ function stl_options_page() {
 <th scope="row"><?php _e("Script identificator:", 'srbtranslatin'); ?></th>
 <td><input name="<?php echo $stl_lang_identificator_data_field_name; ?>" type="text" value="<?php echo $stl_lang_identificator_opt_val; ?>"?><br />
 <?php echo __('Set what identificator for script selection will be used in urls.', 'srbtranslatin'); ?>
+<?php
+	if ( $stl_wpml_plugin_active && ($stl_lang_identificator_opt_val == 'lang') ) {
+?>
+<br /><span style="color:red"><?php echo __("WARNING! You have WPML installed! Using 'lang' for url identificator for SrbTranslating will create conflicts with WMPL! Change identificator!", 'srbtranslatin'); ?></span>
+<?php
+	}
+?>
 </td>
 </tr>
 
@@ -709,7 +739,7 @@ function stl_options_page() {
 
 <tr>
 <th scope="row"><?php _e("Permalink options:", 'srbtranslatin'); ?></th>
-<td><input name="<?php echo $stl_transliterate_title_data_field_name; ?>" type="checkbox" <?php echo $stl_transliterate_title_opt_val=='on' ? 'checked="checked"' : '' ?>> <?php _e("transliterate title to permalink", 'srbtranslatin'); ?><br />
+<td><input name="<?php echo $stl_transliterate_title_data_field_name; ?>" type="checkbox" <?php echo $stl_transliterate_title_opt_val==1 ? 'checked="checked"' : '' ?>> <?php _e("transliterate title to permalink", 'srbtranslatin'); ?><br />
 <?php echo __('Check to make permalinks in Latin alphabet regarding Serbian language.', 'srbtranslatin'); ?>
 </td>
 </tr>

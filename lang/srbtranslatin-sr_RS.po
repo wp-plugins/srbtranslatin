@@ -7,7 +7,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2013-07-10 19:58+0100\n"
+"PO-Revision-Date: 2014-06-26 19:12+0100\n"
 "Last-Translator: Predrag Supurović <private>\n"
 "Language-Team: pedja\n"
 "X-Generator: Poedit 1.5.7\n"
@@ -16,7 +16,7 @@ msgstr ""
 
 #: srbtranslatin.php:572
 msgid "Options saved."
-msgstr "Подешавање је снимљено."
+msgstr "Options saved."
 
 #: srbtranslatin.php:588
 msgid "SrbTransLat Plugin Options"
@@ -67,12 +67,11 @@ msgstr "Сними подешавање"
 
 #: srbtranslatin.php:625
 msgid "Script identificator:"
-msgstr "Идентификатор писма:"
+msgstr "Ознака писма:"
 
 #: srbtranslatin.php:625
 msgid "Set what identificator for script selection will be used in urls."
-msgstr ""
-"Упишите идентификатор који ће бити употребљен за ознаку писма у веб адреси."
+msgstr "Упишите ознаку који ће бити употребљена за ознаку писма у веб адреси."
 
 #: srbtranslatin_widget.php:10
 msgid "SrbTransLatin Script Selector"
@@ -126,3 +125,11 @@ msgstr "Укључи да се избор писма чува у колачић�
 msgid "Check to make permalinks in Latin alphabet regarding Serbian language."
 msgstr ""
 "Укључи креирање сталних линкова латинским писмом у сладу са српским језиком."
+
+#: srbtranslatin.php:142
+msgid ""
+"WARNING! You have WPML installed! Using 'lang' for url identificator for "
+"SrbTranslating will create conflicts with WMPL! Change identificator!"
+msgstr ""
+"УПОЗОРЕЊЕ! Имате инсталиран WPML додатак! Употреба ознаке писма 'lang' за "
+"SrbTransLatin ће направити проблем са WPML! Промените ознаку!"
