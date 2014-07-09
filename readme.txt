@@ -176,7 +176,7 @@ No. This is free to use script. If you want to show appreciation, spread the wor
 
 == Changelog ==
 
-= 1.32 =
+= 1.33 =
 
 Added option to display only option to select non current script
 
