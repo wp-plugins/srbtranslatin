@@ -37,7 +37,7 @@ Plugin Name: Serbian Transliteration of Cyrillic to Latin Script
 Plugin URI: http://pedja.supurovic.net/srbtranslatin/
 Description: Allows users to choose if they want to see site in Serbian Cyrillic or Serbian Latin script. After installation, check <a href="options-general.php?page=srbtranslatoptions">Settings</a>
 Author: Predrag Supurović
-Version: 1.31
+Version: 1.33
 Author URI: http://pedja.supurovic.net
 */
 
@@ -45,6 +45,9 @@ Author URI: http://pedja.supurovic.net
 /***********************************************************/
 /***********************************************************/
 /***********************************************************/
+
+//test for WMPL language
+//DEFINE ('ICL_LANGUAGE_CODE', 'sr');
 
 $stl_priority =  99;
 
@@ -72,6 +75,14 @@ $stl_lang_identificator_opt_name = 'lang_identificator';
 $stl_lang_identificator_data_field_name = 'lang_identificator';
 $stl_lang_identificator = get_option ($stl_lang_identificator_opt_name);
 
+$stl_lang_cir_id_opt_name = 'cir_id';
+$stl_lang_cir_id_data_field_name = 'cir_id';
+$stl_lang_cir_id = get_option ($stl_lang_cir_id_opt_name);
+
+$stl_lang_lat_id_opt_name = 'lat_id';
+$stl_lang_lat_id_data_field_name = 'lat_id';
+$stl_lang_lat_id = get_option ($stl_lang_lat_id_opt_name);
+
 $m_wpml_plugin_file = dirname( plugin_dir_path( __FILE__ ) ) . '/' .'sitepress-multilingual-cms/sitepress.php';
 //echo "m_wpml_plugin_file=$m_wpml_plugin_file!";
 
@@ -91,6 +102,12 @@ if (empty ($stl_lang_identificator)) {
 	$m_lang_identificator = $stl_lang_identificator;
 }
 
+$stl_lang_cir_id = 'cir';
+$stl_lang_lat_id = 'lat';
+
+$m_lang_lat_id = $stl_lang_lat_id;
+
+
 $m_cookie_language = '';
 
 if ($stl_use_cookie) {
@@ -103,6 +120,7 @@ $stl_default_language_opt_name = 'stl_default_language';
 $stl_default_language_data_field_name = 'stl_default_language';
 
 $m_default_language = get_option( $stl_default_language_opt_name );
+
 if ($m_default_language == 'ifcir') {
 	$m_accept_languages = split(',', $_SERVER["HTTP_ACCEPT_LANGUAGE"]);
 	$m_accepts_cyrillic = false;
@@ -111,14 +129,18 @@ if ($m_default_language == 'ifcir') {
 	}
 
 	if ($m_accepts_cyrillic) {
-		$m_default_language = 'cir';
+		$m_default_language = $stl_lang_cir_id;
 	} else {
-		$m_default_language = 'lat';
+		$m_default_language = $stl_lang_lat_id;
 	}
 }
 
-if ( ($m_default_language != 'cir') and ($m_default_language != 'lat') ) {
-	$m_default_language = 'cir';
+//echo "m_default_language=$m_default_language<br>";
+//echo "stl_lang_cir_id=$stl_lang_cir_id<br>";
+//echo "stl_lang_lat_id=$stl_lang_lat_id<br>";
+
+if ( ($m_default_language != $stl_lang_cir_id) and ($m_default_language != $stl_lang_lat_id) ) {
+	$m_default_language = $stl_lang_cir_id;
 }
 
 $stl_default_language = $m_default_language;
@@ -153,7 +175,7 @@ if ( isset($_REQUEST[$m_lang_identificator]) ) {
 	$stl_current_language = $m_cookie_language;
 }
 
-if ( ($stl_current_language  != "cir") and ($stl_current_language != "lat") ) {
+if ( ($stl_current_language  != $stl_lang_cir_id) and ($stl_current_language != $stl_lang_lat_id) ) {
 	$stl_current_language = $stl_default_language;
 }
 
@@ -355,40 +377,37 @@ class SrbTransLatin {
 			global $stl_transliterate_title;
 			global $stl_priority;
 			
-			
+			add_action("plugins_loaded",array(&$this,"init_lang"));
 	
-		
-		add_action("plugins_loaded",array(&$this,"init_lang"));
+			$m_plugin = plugin_basename(__FILE__);
+			add_filter("plugin_action_links_$m_plugin", array(&$this, 'plugin_settings_link') );
+	
+	
+			if ($stl_transliterate_title) {
+				add_action('sanitize_title', array(&$this, 'change_permalink'), 0);
+				//add_action('sanitize_title', array(&$this, 'convert_title'), $stl_priority);
+				add_filter('the_title', array(&$this,'convert_title'), $stl_priority);
+			}
+	
+			add_action('wp_head', array(&$this,'buffer_start'), $stl_priority);
+			add_action('wp_footer', array(&$this,'buffer_end'), $stl_priority);
+			
+			add_action('rss_head', array(&$this,'buffer_start'), $stl_priority);		
+			add_action('rss_footer', array(&$this,'buffer_end'), $stl_priority);		
+	
+			add_action('atom_head', array(&$this,'buffer_start'), $stl_priority);		
+			add_action('atom_footer', array(&$this,'buffer_end'), $stl_priority);		
+			
+			add_action('rdf_head', array(&$this,'buffer_start'), $stl_priority);		
+			add_action('rdf_footer', array(&$this,'buffer_end'), $stl_priority);		
+			
+			add_action('rss2_head', array(&$this,'buffer_start'), $stl_priority);		
+			add_action('rss2_footer', array(&$this,'buffer_end'), $stl_priority);		
+			
+			add_filter('option_blogname', array(&$this,'callback'), $stl_priority);
+			add_filter('option_blogdescription', array(&$this,'callback'), $stl_priority);
 
-		$m_plugin = plugin_basename(__FILE__);
-		add_filter("plugin_action_links_$m_plugin", array(&$this, 'plugin_settings_link') );
-
-
-		if ($stl_transliterate_title) {
-			add_action('sanitize_title', array(&$this, 'change_permalink'), 0);
-      //add_action('sanitize_title', array(&$this, 'convert_title'), $stl_priority);
-			add_filter('the_title', array(&$this,'convert_title'), $stl_priority);
-		}
-
-		add_action('wp_head', array(&$this,'buffer_start'), $stl_priority);
-		add_action('wp_footer', array(&$this,'buffer_end'), $stl_priority);
-		
-		add_action('rss_head', array(&$this,'buffer_start'), $stl_priority);		
-		add_action('rss_footer', array(&$this,'buffer_end'), $stl_priority);		
-
-		add_action('atom_head', array(&$this,'buffer_start'), $stl_priority);		
-		add_action('atom_footer', array(&$this,'buffer_end'), $stl_priority);		
-		
-		add_action('rdf_head', array(&$this,'buffer_start'), $stl_priority);		
-		add_action('rdf_footer', array(&$this,'buffer_end'), $stl_priority);		
-		
-		add_action('rss2_head', array(&$this,'buffer_start'), $stl_priority);		
-		add_action('rss2_footer', array(&$this,'buffer_end'), $stl_priority);		
-		
-		add_filter('option_blogname', array(&$this,'callback'), $stl_priority);
-		add_filter('option_blogdescription', array(&$this,'callback'), $stl_priority);
-
-	} // function 
+		} // function 
 	
 	
 	function init_lang() {
@@ -414,8 +433,8 @@ class SrbTransLatin {
 		
 		$m_text = $text;
 		$m_chunks = $this->parse_lang ($text, '');
+	
 		$m_text = $this->join_lang($m_chunks);
-		
 		if ( $stl_current_language != $stl_default_language ) {
 			$m_text = alter_url_batch ($m_text);		
 		}
@@ -599,6 +618,15 @@ function stl_options_page() {
 	global $stl_lang_identificator_opt_name;
 	global $stl_lang_identificator_data_field_name;
 	global $stl_lang_identificator;
+	
+	global $stl_lang_cir_id;
+	global $stl_lang_lat_id;
+	
+	global $stl_lang_cir_id_opt_name;
+	global $stl_lang_lat_id_opt_name;	
+	
+	global $stl_lang_cir_id_data_field_name;
+	global $stl_lang_lat_id_data_field_name;
 
 	global $stl_default_language_opt_name;
 	global $stl_default_language_data_field_name;
@@ -621,9 +649,14 @@ function stl_options_page() {
   $stl_lang_identificator_opt_val = get_option( $stl_lang_identificator_opt_name );
 	if (empty ($stl_lang_identificator_opt_val)) $stl_lang_identificator_opt_val = 'lang';
 
+  $stl_lang_cir_id_opt_val = get_option( $stl_lang_cir_id_opt_name );
+	if (empty ($stl_lang_cir_id_opt_val)) $stl_lang_cir_id_opt_val = $stl_lang_cir_id;
+
+  $stl_lang_lat_id_opt_val = get_option( $stl_lang_lat_id_opt_name );
+	if (empty ($stl_lang_lat_id_opt_val)) $stl_lang_lat_id_opt_val = $stl_lang_lat_id;
 
   $stl_default_language_opt_val = get_option( $stl_default_language_opt_name );
-	if (empty ($stl_default_language_opt_val)) $stl_default_language_opt_val = 'cir';
+	if (empty ($stl_default_language_opt_val)) $stl_default_language_opt_val = $stl_lang_cir_id;
 	
 	$stl_widget_title_opt_val = get_option($stl_widget_title_opt_name);
 	if (empty ($stl_widget_title_opt_val)) $stl_widget_title_opt_val = "Избор писма";
@@ -661,9 +694,14 @@ function stl_options_page() {
 				}
         update_option( $stl_lang_identificator_opt_name, $stl_lang_identificator_opt_val );
 
+        //$stl_lang_cir_id_opt_val = $_POST[ $stl_lang_cir_id_data_field_name ];
+        //update_option( $stl_lang_cir_id_opt_name, $stl_lang_cir_id_opt_val );
+
+        //$stl_lang_lat_id_opt_val = $_POST[ $stl_lang_lat_id_data_field_name ];
+        //update_option( $stl_lang_lat_id_opt_name, $stl_lang_lat_id_opt_val );
+
         $stl_default_language_opt_val = $_POST[ $stl_default_language_data_field_name ];
         update_option( $stl_default_language_opt_name, $stl_default_language_opt_val );
-
 				
 				$stl_transliterate_title_opt_val = isset ($_POST[$stl_transliterate_title_data_field_name]);
         update_option( $stl_transliterate_title_opt_name, $stl_transliterate_title_opt_val );
@@ -717,13 +755,28 @@ function stl_options_page() {
 </td>
 </tr>
 
+<!--
+<tr>
+<th scope="row"><?php _e("Cyrillic Identificator Value:", 'srbtranslatin'); ?></th>
+<td><input name="<?php echo $stl_lang_cir_id_data_field_name; ?>" type="text" value="<?php echo $stl_lang_cir_id_opt_val; ?>"?><br />
+<?php echo __('Set what value should be used for Cyrillic script identificator in urls.', 'srbtranslatin'); ?>
+</td>
+</tr>
+
+<tr>
+<th scope="row"><?php _e("Latin Identificator Value:", 'srbtranslatin'); ?></th>
+<td><input name="<?php echo $stl_lang_lat_id_data_field_name; ?>" type="text" value="<?php echo $stl_lang_lat_id_opt_val; ?>"?><br />
+<?php echo __('Set what value should be used for Latin script identificator in urls.', 'srbtranslatin'); ?>
+</td>
+</tr>
+-->
 
 <tr>
 <th scope="row"><?php _e("Default script:", 'srbtranslatin'); ?></th>
 <td>
 <select name="<?php echo $stl_default_language_data_field_name; ?>">
-<option value="cir" <?php echo $stl_default_language_opt_val=='cir' ? 'selected="selected"' : '' ?>><?php echo __('Cyrillic', 'srbtranslatin'); ?></option>
-<option value="lat" <?php echo $stl_default_language_opt_val=='lat' ? 'selected="selected"' : '' ?>><?php echo __('Latin', 'srbtranslatin'); ?></option>
+<option value="<?php echo $stl_lang_cir_id_opt_val; ?>" <?php echo $stl_default_language_opt_val==$stl_lang_cir_id_opt_val ? 'selected="selected"' : '' ?>><?php echo __('Cyrillic', 'srbtranslatin'); ?></option>
+<option value="<?php echo $stl_lang_lat_id_opt_val; ?>" <?php echo $stl_default_language_opt_val==$stl_lang_lat_id_opt_val ? 'selected="selected"' : '' ?>><?php echo __('Latin', 'srbtranslatin'); ?></option>
 <option value="ifcir" <?php echo $stl_default_language_opt_val=='ifcir' ? 'selected="selected"' : '' ?>><?php echo __("Cyrillic, if visitor's browser accepts it", 'srbtranslatin') ?></option>
 
 </select>
@@ -757,27 +810,50 @@ function stl_options_page() {
  
 }
 
-function stl_show_selector($p_selection_type = 'oneline', $p_oneline_separator = ' | ', $p_cirilica_title = 'ћирилица', $p_latinica_title = 'латиница') {
+function stl_show_selector($p_selection_type = 'oneline', $p_oneline_separator = ' | ', $p_cirilica_title = 'ћирилица', $p_latinica_title = 'латиница', 
+													  $p_inactive_script_only = false, $p_show_only_on_wpml_languages = '') {
 	global $m_lang_identificator;
 	global $m_default_language;
+	global $stl_lang_cir_id;
+	global $stl_lang_lat_id;
 
     if (isset ($_REQUEST[$m_lang_identificator])) {
 			$m_current_language = $_REQUEST[$m_lang_identificator];
 		} else {
   		$m_current_language = $m_default_language;
 		}
-		$m_cir_url = url_current_add_param ($m_lang_identificator. '=cir', true);
-		$m_lat_url = url_current_add_param ($m_lang_identificator . '=lat', true);
+		
+		$m_show_only_on_wpml_languages = trim ($p_show_only_on_wpml_languages);
+		$m_wpml_languages = explode(',', $m_show_only_on_wpml_languages);
+		
+		if (defined('ICL_LANGUAGE_CODE')) {
+		  $m_ICL_LANGUAGE_CODE = ICL_LANGUAGE_CODE;
+		} else {
+			$m_ICL_LANGUAGE_CODE = '';
+		}
+		
+//echo "m_ICL_LANGUAGE_CODE	= $m_ICL_LANGUAGE_CODE";
+//print_r ($m_wpml_languages);
+//echo in_array ($m_ICL_LANGUAGE_CODE, $m_wpml_languages);
 
-		switch ($p_selection_type) {
-			case 'list':
+
+		if ( empty ($m_show_only_on_wpml_languages)  || in_array ($m_ICL_LANGUAGE_CODE, $m_wpml_languages) ) {
+		
+			$m_cir_url = url_current_add_param ($m_lang_identificator. '=' . $stl_lang_cir_id, true);
+			$m_lat_url = url_current_add_param ($m_lang_identificator . '=' . $stl_lang_lat_id, true);
+		
+			$m_show_cir = !$p_inactive_script_only || ($m_current_language != $stl_lang_cir_id);
+			$m_show_lat = !$p_inactive_script_only || ($m_current_language != $stl_lang_lat_id);		
+
+			switch ($p_selection_type) {
+				case 'list':
 
 
 ?>
 <form action="" method="post">
 <select name="<?php echo $m_lang_identificator; ?>" id="lang" onchange="this.form.submit()">
-<option value="cir" <?php echo $m_current_language=='cir' ? 'selected="selected"' : '' ?>>[lang id="skip"]<?php echo $p_cirilica_title; ?>[/lang]</option>
-<option value="lat" <?php echo $m_current_language=='lat' ? 'selected="selected"' : '' ?>><?php echo $p_latinica_title; ?></option>
+<option value="<?php echo $stl_lang_cir_id; ?>" <?php echo $m_current_language==$stl_lang_cir_id ? 'selected="selected"' : '' ?>>[lang id="skip"]<?php echo $p_cirilica_title; ?>[/lang]</option>
+<option value="<?php echo $stl_lang_lat_id; ?>" <?php echo $m_current_language==$stl_lang_lat_id ? 'selected="selected"' : '' ?>><?php echo $p_latinica_title; ?></option>
 </select>
 </form>
 <?php
@@ -787,7 +863,28 @@ function stl_show_selector($p_selection_type = 'oneline', $p_oneline_separator =
 
 ?>
 <p>
-<a href="<?php echo $m_cir_url; ?>">[lang id="skip"]<?php echo $p_cirilica_title; ?>[/lang]</a><?php echo $p_oneline_separator; ?><a href="<?php echo $m_lat_url; ?>"><?php echo $p_latinica_title; ?></a>
+<?php
+  if ($m_show_cir) {
+?>
+<a href="<?php echo $m_cir_url; ?>">[lang id="skip"]<?php echo $p_cirilica_title; ?>[/lang]</a>
+<?php
+  }
+?>
+<?php
+  if (!$p_inactive_script_only) {
+?>
+<?php echo $p_oneline_separator; ?>
+<?php
+  }
+?>
+<?php
+  if ($m_show_lat) {
+?>
+<a href="<?php echo $m_lat_url; ?>"><?php echo $p_latinica_title; ?></a>
+<?php
+  }
+?>
+
 </p>
 <?php
 
@@ -800,13 +897,26 @@ function stl_show_selector($p_selection_type = 'oneline', $p_oneline_separator =
 
 ?>
 <ul>
+<?php
+  if ($m_show_cir) {
+?>
 <li><a href="<?php echo $m_cir_url; ?>">[lang id="skip"]<?php echo $p_cirilica_title; ?>[/lang]</a></li>
+<?php
+  }
+?>
+<?php
+  if ($m_show_lat) {
+?>
 <li><a href="<?php echo $m_lat_url; ?>"><?php echo $p_latinica_title; ?></a></li>
+<?php
+  }
+?>
 </ul>
 
 <?php
 	
-	  } // switch
+	  	} // switch
+		} // if $m_show_only_on_wpml_languages
 
 
 }

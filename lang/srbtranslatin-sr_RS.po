@@ -7,7 +7,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2014-06-26 19:12+0100\n"
+"PO-Revision-Date: 2014-07-09 19:02+0100\n"
 "Last-Translator: Predrag Supurović <private>\n"
 "Language-Team: pedja\n"
 "X-Generator: Poedit 1.5.7\n"
@@ -85,11 +85,11 @@ msgstr "Наслов:"
 msgid "show widget title"
 msgstr "прикажи наслов виџета"
 
-#: srbtranslatin_widget.php:163
-msgid "Cyril option title:"
+#: srbtranslatin_widget.php:165
+msgid "Cyrilic option title:"
 msgstr "Наслов за опцију ћирилице:"
 
-#: srbtranslatin_widget.php:169
+#: srbtranslatin_widget.php:171
 msgid "Latin option title:"
 msgstr "Наслов за опцију латинице:"
 
@@ -133,3 +133,11 @@ msgid ""
 msgstr ""
 "УПОЗОРЕЊЕ! Имате инсталиран WPML додатак! Употреба ознаке писма 'lang' за "
 "SrbTransLatin ће направити проблем са WPML! Промените ознаку!"
+
+#: srbtranslatin_widget.php:142
+msgid "show only inactive script option"
+msgstr "прикажи само неизабрано писмо"
+
+#: srbtranslatin_widget.php:142
+msgid "Show only on WPML languages:"
+msgstr "Прикажи само за WPML језике:"

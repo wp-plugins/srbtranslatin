@@ -22,6 +22,14 @@ class SrbTransLatin_Widget extends WP_Widget {
 		$selection_type = $instance['selection_type'];
 		$oneline_separator = $instance['oneline_separator'];
 
+    $inactive_script_only = ! empty ($instance['inactive_script_only']);
+
+		if (isset ($instance['show_only_on_wpml_languages'])) {
+	    $show_only_on_wpml_languages = $instance['show_only_on_wpml_languages'];		
+		} else {
+			$show_only_on_wpml_languages = '';
+		}
+
 		$cirilica_title = $instance['cirilica_title'];
 		
 		if (empty ($cirilica_title)) {
@@ -50,49 +58,15 @@ class SrbTransLatin_Widget extends WP_Widget {
 		} else {
 			$m_current_language = $stl_default_language;
 		}
+		
+    global $stl_lang_cir_id;
+    global $stl_lang_lat_id;
 
-		$m_cir_url = url_current_add_param ($m_lang_identificator . '=cir', true);
+		$m_cir_url = url_current_add_param ($m_lang_identificator . '=' . $stl_lang_cir_id, true);
 
-		$m_lat_url = url_current_add_param ($m_lang_identificator . '=lat', true);
-
-		switch ($selection_type) {
-			case 'list':
-
-
-?>
-<form action="" method="post">
-<select name="<?php echo $m_lang_identificator; ?>" id="lang" onchange="this.form.submit()">
-<option value="cir" <?php echo $m_current_language=='cir' ? 'selected="selected"' : '' ?>>[lang id="skip"]<?php echo $cirilica_title; ?>[/lang]</option>
-<option value="lat" <?php echo $m_current_language=='lat' ? 'selected="selected"' : '' ?>><?php echo $latinica_title; ?></option>
-</select>
-</form>
-<?php
-				break;
-
-			case 'oneline':
-
-?>
-<p>
-<a href="<?php echo $m_cir_url; ?>">[lang id="skip"]<?php echo $cirilica_title; ?>[/lang]</a><?php echo $oneline_separator; ?><a href="<?php echo $m_lat_url; ?>"><?php echo $latinica_title; ?></a>
-</p>
-<?php
-
-				break;
-
-
-
-			default:
-
-
-?>
-<ul>
-<li><a href="<?php echo $m_cir_url; ?>">[lang id="skip"]<?php echo $cirilica_title; ?>[/lang]</a></li>
-<li><a href="<?php echo $m_lat_url; ?>"><?php echo $latinica_title; ?></a></li>
-</ul>
-
-<?php
-	
-	  } // switch
+		$m_lat_url = url_current_add_param ($m_lang_identificator . '=' . $stl_lang_lat_id, true);
+		
+		echo stl_show_selector($selection_type, $oneline_separator, $cirilica_title, $latinica_title, $inactive_script_only, $show_only_on_wpml_languages);
 
 		echo $after_widget;
 		echo '</span>';
@@ -108,6 +82,9 @@ class SrbTransLatin_Widget extends WP_Widget {
 		$instance['oneline_separator'] = strip_tags( $new_instance['oneline_separator'] );
 		$instance['cirilica_title'] = strip_tags( $new_instance['cirilica_title'] );
 		$instance['latinica_title'] = strip_tags( $new_instance['latinica_title'] );		
+		$instance['inactive_script_only'] = strip_tags( $new_instance['inactive_script_only'] );
+		$instance['show_only_on_wpml_languages'] = strip_tags( $new_instance['show_only_on_wpml_languages'] );
+		
 
 		return $instance;
 	}
@@ -158,6 +135,20 @@ class SrbTransLatin_Widget extends WP_Widget {
 		else {
 			$latinica_title = 'latinica';
 		}
+		
+		if ( isset( $instance[ 'inactive_script_only' ] ) ) {
+			$inactive_script_only = $instance[ 'inactive_script_only' ];
+		}
+		else {
+			$inactive_script_only = false;
+		}		
+
+		if ( isset( $instance[ 'show_only_on_wpml_languages' ] ) ) {
+			$show_only_on_wpml_languages = $instance[ 'show_only_on_wpml_languages' ];
+		}
+		else {
+			$show_only_on_wpml_languages = '';
+		}
 
 		?>
 		<p>
@@ -171,7 +162,7 @@ class SrbTransLatin_Widget extends WP_Widget {
 
 
 		<p>
-		<label for="<?php echo $this->get_field_id( 'cirilica_title' ); ?>"><?php _e( 'Cyril option title:' ); ?></label> 
+		<label for="<?php echo $this->get_field_id( 'cirilica_title' ); ?>"><?php _e( 'Cyrilic option title:' ); ?></label> 
 		<input class="widefat" id="<?php echo $this->get_field_id( 'cirilica_title' ); ?>" name="<?php echo $this->get_field_name( 'cirilica_title' ); ?>" type="text" value="<?php echo esc_attr( $cirilica_title ); ?>" />
 		</p>
 
@@ -195,6 +186,15 @@ class SrbTransLatin_Widget extends WP_Widget {
 		<input class="" size="4" id="<?php echo $this->get_field_id( 'oneline_separator' ); ?>" name="<?php echo $this->get_field_name( 'oneline_separator' ); ?>" type="text" value="<?php echo esc_attr( $oneline_separator ); ?>" />
 		</p>
 
+
+		<p>
+		<input id="<?php echo $this->get_field_id( 'inactive_script_only' ); ?>" name="<?php echo $this->get_field_name( 'inactive_script_only' ); ?>" type="checkbox" <?php echo $inactive_script_only=='on' ? 'checked="checked"' : '' ?>> <?php _e("show only inactive script option", 'srbtranslatin'); ?>
+		</p>
+		
+		<p>
+		<label for="<?php echo $this->get_field_id( 'show_only_on_wpml_languages' ); ?>"><?php _e( 'Show only on WPML languages:', 'srbtranslatin' ); ?></label> 
+		<input class="" size="12" id="<?php echo $this->get_field_id( 'show_only_on_wpml_languages' ); ?>" name="<?php echo $this->get_field_name( 'show_only_on_wpml_languages' ); ?>" type="text" value="<?php echo esc_attr( $show_only_on_wpml_languages ); ?>" />
+		</p>		
 
 		<?php 
 	}
